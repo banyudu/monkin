@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		580F3518DAFB2DF82C71F30E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5665016EDEA8646928D618A7 /* AppDelegate.swift */; };
 		5EE2430A00A1255BA25DC397 /* PetWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E0F1586DF3634EE09F2F5A /* PetWindowController.swift */; };
+		D502A9BE31595552099B99C3 /* monkin-retro.svg in Resources */ = {isa = PBXBuildFile; fileRef = CD95B63B7358EF9078B96935 /* monkin-retro.svg */; };
 		E78DCA17291B52030902A2EE /* PetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3553E2E4B7888DE53F62A953 /* PetView.swift */; };
 /* End PBXBuildFile section */
 
@@ -19,6 +20,7 @@
 		81F1CBAFAAA8AA205E475E19 /* Monkin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Monkin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B35915515ED8A57FBE6807EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		BF7DB7304AD48EB98CF8A525 /* Monkin.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Monkin.entitlements; sourceTree = "<group>"; };
+		CD95B63B7358EF9078B96935 /* monkin-retro.svg */ = {isa = PBXFileReference; path = "monkin-retro.svg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -30,8 +32,17 @@
 				BF7DB7304AD48EB98CF8A525 /* Monkin.entitlements */,
 				3553E2E4B7888DE53F62A953 /* PetView.swift */,
 				05E0F1586DF3634EE09F2F5A /* PetWindowController.swift */,
+				8DC2793AC6C0F5313A787E50 /* Resources */,
 			);
 			path = Monkin;
+			sourceTree = "<group>";
+		};
+		8DC2793AC6C0F5313A787E50 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CD95B63B7358EF9078B96935 /* monkin-retro.svg */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		C79D338087EA08F9FE045F5B = {
@@ -58,6 +69,7 @@
 			buildConfigurationList = B469D40838CECB47041E15B3 /* Build configuration list for PBXNativeTarget "Monkin" */;
 			buildPhases = (
 				B428DD7F27DC14A9AEB55F87 /* Sources */,
+				C57D05602ECCE4F76CD733A2 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -103,6 +115,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C57D05602ECCE4F76CD733A2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D502A9BE31595552099B99C3 /* monkin-retro.svg in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B428DD7F27DC14A9AEB55F87 /* Sources */ = {

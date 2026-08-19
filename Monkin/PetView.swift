@@ -3,6 +3,11 @@ import AppKit
 final class PetView: NSView {
     private let furColor = NSColor(calibratedRed: 0.58, green: 0.30, blue: 0.13, alpha: 1)
     private let bellyColor = NSColor(calibratedRed: 0.94, green: 0.72, blue: 0.43, alpha: 1)
+    private let accentColor = NSColor(calibratedRed: 0.45, green: 0.34, blue: 0.82, alpha: 1)
+    private lazy var svgMascot: NSImage? = {
+        guard let url = Bundle.main.url(forResource: "monkin-retro", withExtension: "svg") else { return nil }
+        return NSImage(contentsOf: url)
+    }()
     private var blinkTimer: Timer?
     private var isBlinking = false
 
@@ -25,65 +30,154 @@ final class PetView: NSView {
 
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
-        drawTail()
-        drawBody()
+
+        if let svgMascot {
+            svgMascot.draw(in: bounds, from: .zero, operation: .sourceOver, fraction: 1)
+            return
+        }
+
+        let context = NSGraphicsContext.current?.cgContext
+        context?.saveGState()
+        let scale = bounds.width / 220
+        context?.scaleBy(x: scale, y: scale)
+        context?.translateBy(x: 0, y: -48)
+
+        drawAccessories()
         drawEars()
         drawHead()
         drawFace()
-        drawFeet()
+
+        context?.restoreGState()
     }
 
     private func drawBody() {
         let body = NSBezierPath(ovalIn: NSRect(x: 58, y: 45, width: 104, height: 130))
-        furColor.setFill()
-        body.fill()
+        fill(body, with: gradient([
+            furColor.blended(withFraction: 0.28, of: .white) ?? furColor,
+            furColor,
+            furColor.blended(withFraction: 0.30, of: .black) ?? furColor
+        ]))
+        stroke(body, with: NSColor(calibratedWhite: 0.12, alpha: 0.22), width: 2)
 
         let belly = NSBezierPath(ovalIn: NSRect(x: 79, y: 54, width: 62, height: 84))
-        bellyColor.setFill()
-        belly.fill()
+        fill(belly, with: gradient([
+            bellyColor.blended(withFraction: 0.35, of: .white) ?? bellyColor,
+            bellyColor,
+            bellyColor.blended(withFraction: 0.18, of: .black) ?? bellyColor
+        ]))
     }
 
     private func drawHead() {
         let head = NSBezierPath(ovalIn: NSRect(x: 38, y: 125, width: 144, height: 105))
-        furColor.setFill()
-        head.fill()
+        fill(head, with: gradient([
+            furColor.blended(withFraction: 0.33, of: .white) ?? furColor,
+            furColor,
+            furColor.blended(withFraction: 0.28, of: .black) ?? furColor
+        ]))
+        stroke(head, with: NSColor(calibratedWhite: 0.12, alpha: 0.22), width: 2)
 
         let muzzle = NSBezierPath(ovalIn: NSRect(x: 67, y: 137, width: 86, height: 53))
-        bellyColor.setFill()
-        muzzle.fill()
+        fill(muzzle, with: gradient([
+            bellyColor.blended(withFraction: 0.30, of: .white) ?? bellyColor,
+            bellyColor,
+            bellyColor.blended(withFraction: 0.15, of: .black) ?? bellyColor
+        ]))
+
+        let tuft = NSBezierPath()
+        tuft.move(to: NSPoint(x: 97, y: 221))
+        tuft.curve(to: NSPoint(x: 103, y: 239), controlPoint1: NSPoint(x: 96, y: 231), controlPoint2: NSPoint(x: 99, y: 237))
+        tuft.curve(to: NSPoint(x: 111, y: 225), controlPoint1: NSPoint(x: 107, y: 238), controlPoint2: NSPoint(x: 109, y: 229))
+        tuft.curve(to: NSPoint(x: 120, y: 238), controlPoint1: NSPoint(x: 114, y: 229), controlPoint2: NSPoint(x: 117, y: 236))
+        tuft.curve(to: NSPoint(x: 125, y: 222), controlPoint1: NSPoint(x: 123, y: 237), controlPoint2: NSPoint(x: 127, y: 228))
+        tuft.close()
+        fill(tuft, with: gradient([
+            furColor.blended(withFraction: 0.32, of: .white) ?? furColor,
+            furColor
+        ]))
+
+        let hairClip = NSBezierPath(ovalIn: NSRect(x: 134, y: 211, width: 15, height: 15))
+        accentColor.setFill()
+        hairClip.fill()
+        let clipStar = star(center: NSPoint(x: 141.5, y: 218.5), outerRadius: 7, innerRadius: 3)
+        NSColor.white.withAlphaComponent(0.88).setFill()
+        clipStar.fill()
+    }
+
+    private func drawAccessories() {
+        let halo = NSBezierPath(ovalIn: NSRect(x: 50, y: 211, width: 120, height: 50))
+        accentColor.withAlphaComponent(0.55).setStroke()
+        halo.lineWidth = 3
+        halo.stroke()
+
+        sparkle(center: NSPoint(x: 39, y: 218), radius: 7, color: NSColor.systemPink.withAlphaComponent(0.85))
+        sparkle(center: NSPoint(x: 183, y: 205), radius: 5, color: NSColor.systemYellow.withAlphaComponent(0.9))
+        sparkle(center: NSPoint(x: 178, y: 235), radius: 3.5, color: accentColor.withAlphaComponent(0.8))
     }
 
     private func drawEars() {
         for x in [43.0, 137.0] {
             let ear = NSBezierPath(ovalIn: NSRect(x: x, y: 188, width: 40, height: 40))
-            furColor.setFill()
-            ear.fill()
+            fill(ear, with: gradient([
+                furColor.blended(withFraction: 0.25, of: .white) ?? furColor,
+                furColor.blended(withFraction: 0.20, of: .black) ?? furColor
+            ]))
             let inner = NSBezierPath(ovalIn: NSRect(x: x + 8, y: 196, width: 24, height: 24))
-            NSColor.systemPink.withAlphaComponent(0.7).setFill()
-            inner.fill()
+            fill(inner, with: gradient([
+                NSColor.systemPink.withAlphaComponent(0.82),
+                NSColor.systemPink.withAlphaComponent(0.38)
+            ]))
         }
     }
 
     private func drawFace() {
         let eyeY: CGFloat = 179
-        for x in [77.0, 130.0] {
-            let eye = NSBezierPath(ovalIn: NSRect(x: x, y: eyeY, width: 12, height: isBlinking ? 2 : 17))
+
+        let leftBrow = NSBezierPath()
+        leftBrow.move(to: NSPoint(x: 73, y: 207))
+        leftBrow.curve(to: NSPoint(x: 90, y: 211), controlPoint1: NSPoint(x: 79, y: 213), controlPoint2: NSPoint(x: 85, y: 214))
+        leftBrow.lineWidth = 3
+        furColor.blended(withFraction: 0.25, of: .black)?.setStroke()
+        leftBrow.stroke()
+
+        let rightBrow = NSBezierPath()
+        rightBrow.move(to: NSPoint(x: 132, y: 211))
+        rightBrow.curve(to: NSPoint(x: 149, y: 207), controlPoint1: NSPoint(x: 137, y: 214), controlPoint2: NSPoint(x: 143, y: 213))
+        rightBrow.lineWidth = 3
+        rightBrow.stroke()
+
+        for x in [74.0, 128.0] {
+            let eye = NSBezierPath(ovalIn: NSRect(x: x, y: eyeY, width: 17, height: isBlinking ? 2 : 21))
             NSColor(white: 0.08, alpha: 1).setFill()
             eye.fill()
+
+            if !isBlinking {
+                let glint = NSBezierPath(ovalIn: NSRect(x: x + 4, y: eyeY + 13, width: 5, height: 5))
+                NSColor.white.withAlphaComponent(0.9).setFill()
+                glint.fill()
+            }
+        }
+
+        for x in [65.0, 139.0] {
+            let cheek = NSBezierPath(ovalIn: NSRect(x: x, y: 151, width: 24, height: 13))
+            NSColor.systemPink.withAlphaComponent(0.30).setFill()
+            cheek.fill()
         }
 
         let nose = NSBezierPath(ovalIn: NSRect(x: 104, y: 153, width: 14, height: 10))
         NSColor(calibratedRed: 0.25, green: 0.08, blue: 0.06, alpha: 1).setFill()
         nose.fill()
 
-        let smile = NSBezierPath()
-        smile.move(to: NSPoint(x: 111, y: 153))
-        smile.curve(to: NSPoint(x: 101, y: 145), controlPoint1: NSPoint(x: 109, y: 148), controlPoint2: NSPoint(x: 104, y: 145))
-        smile.move(to: NSPoint(x: 111, y: 153))
-        smile.curve(to: NSPoint(x: 121, y: 145), controlPoint1: NSPoint(x: 118, y: 148), controlPoint2: NSPoint(x: 119, y: 145))
-        smile.lineWidth = 2
-        NSColor(calibratedWhite: 0.2, alpha: 1).setStroke()
-        smile.stroke()
+        let smile = NSBezierPath(ovalIn: NSRect(x: 97, y: 140, width: 29, height: 20))
+        NSColor(calibratedRed: 0.24, green: 0.07, blue: 0.06, alpha: 1).setFill()
+        smile.fill()
+
+        let tongue = NSBezierPath(ovalIn: NSRect(x: 102, y: 141, width: 19, height: 10))
+        NSColor(calibratedRed: 0.96, green: 0.35, blue: 0.40, alpha: 1).setFill()
+        tongue.fill()
+
+        let tooth = NSBezierPath(roundedRect: NSRect(x: 103, y: 154, width: 17, height: 4), xRadius: 2, yRadius: 2)
+        NSColor.white.withAlphaComponent(0.9).setFill()
+        tooth.fill()
     }
 
     private func drawTail() {
@@ -92,16 +186,86 @@ final class PetView: NSView {
         tail.curve(to: NSPoint(x: 198, y: 116), controlPoint1: NSPoint(x: 193, y: 35), controlPoint2: NSPoint(x: 217, y: 95))
         tail.lineWidth = 15
         tail.lineCapStyle = .round
-        furColor.setStroke()
+        let shadow = NSShadow()
+        shadow.shadowColor = NSColor.black.withAlphaComponent(0.22)
+        shadow.shadowBlurRadius = 5
+        shadow.shadowOffset = NSSize(width: 2, height: -3)
+        shadow.set()
+        furColor.blended(withFraction: 0.18, of: .black)?.setStroke()
+        tail.stroke()
+
+        NSGraphicsContext.current?.saveGraphicsState()
+        NSGraphicsContext.current?.restoreGraphicsState()
+        tail.lineWidth = 4
+        tail.move(to: NSPoint(x: 147, y: 77))
+        tail.curve(to: NSPoint(x: 195, y: 114), controlPoint1: NSPoint(x: 191, y: 47), controlPoint2: NSPoint(x: 208, y: 98))
+        furColor.blended(withFraction: 0.24, of: .white)?.setStroke()
         tail.stroke()
     }
 
     private func drawFeet() {
         for x in [66.0, 125.0] {
             let foot = NSBezierPath(ovalIn: NSRect(x: x, y: 31, width: 42, height: 27))
-            furColor.setFill()
-            foot.fill()
+            fill(foot, with: gradient([
+                furColor.blended(withFraction: 0.20, of: .white) ?? furColor,
+                furColor.blended(withFraction: 0.25, of: .black) ?? furColor
+            ]))
         }
+    }
+
+    private func drawGroundShadow() {
+        let shadow = NSBezierPath(ovalIn: NSRect(x: 51, y: 25, width: 118, height: 18))
+        NSColor.black.withAlphaComponent(0.18).setFill()
+        shadow.fill()
+    }
+
+    private func fill(_ path: NSBezierPath, with gradient: NSGradient) {
+        NSGraphicsContext.current?.saveGraphicsState()
+        path.addClip()
+        gradient.draw(in: NSRect(x: 20, y: 20, width: 190, height: 220), angle: 68)
+        NSGraphicsContext.current?.restoreGraphicsState()
+    }
+
+    private func gradient(_ colors: [NSColor]) -> NSGradient {
+        NSGradient(colors: colors)!
+    }
+
+    private func sparkle(center: NSPoint, radius: CGFloat, color: NSColor) {
+        let sparkle = NSBezierPath()
+        sparkle.move(to: NSPoint(x: center.x, y: center.y + radius))
+        sparkle.line(to: NSPoint(x: center.x + radius * 0.34, y: center.y + radius * 0.34))
+        sparkle.line(to: NSPoint(x: center.x + radius, y: center.y))
+        sparkle.line(to: NSPoint(x: center.x + radius * 0.34, y: center.y - radius * 0.34))
+        sparkle.line(to: NSPoint(x: center.x, y: center.y - radius))
+        sparkle.line(to: NSPoint(x: center.x - radius * 0.34, y: center.y - radius * 0.34))
+        sparkle.line(to: NSPoint(x: center.x - radius, y: center.y))
+        sparkle.line(to: NSPoint(x: center.x - radius * 0.34, y: center.y + radius * 0.34))
+        sparkle.close()
+        color.setFill()
+        sparkle.fill()
+    }
+
+    private func star(center: NSPoint, outerRadius: CGFloat, innerRadius: CGFloat) -> NSBezierPath {
+        let star = NSBezierPath()
+        for index in 0..<10 {
+            let radius = index.isMultiple(of: 2) ? outerRadius : innerRadius
+            let angle = CGFloat(index) * .pi / 5 - .pi / 2
+            let point = NSPoint(x: center.x + cos(angle) * radius,
+                                y: center.y + sin(angle) * radius)
+            if index == 0 {
+                star.move(to: point)
+            } else {
+                star.line(to: point)
+            }
+        }
+        star.close()
+        return star
+    }
+
+    private func stroke(_ path: NSBezierPath, with color: NSColor, width: CGFloat) {
+        color.setStroke()
+        path.lineWidth = width
+        path.stroke()
     }
 
     private func blink() {

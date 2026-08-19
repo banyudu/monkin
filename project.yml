@@ -17,6 +17,8 @@ targets:
     platform: macOS
     sources:
       - path: Monkin
+    resources:
+      - path: Monkin/Resources
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.banyudu.monkin

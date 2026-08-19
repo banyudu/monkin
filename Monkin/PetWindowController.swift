@@ -2,7 +2,7 @@ import AppKit
 
 final class PetWindowController: NSWindowController {
     init() {
-        let petView = PetView(frame: NSRect(x: 0, y: 0, width: 220, height: 250))
+        let petView = PetView(frame: NSRect(x: 0, y: 0, width: 150, height: 125))
         let window = PetWindow(contentRect: petView.frame,
                                styleMask: [.borderless],
                                backing: .buffered,

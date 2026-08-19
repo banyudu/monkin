@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="250" viewBox="0 0 300 250">
+  <defs>
+    <linearGradient id="fur" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#C48751"/>
+      <stop offset="0.58" stop-color="#9A5D34"/>
+      <stop offset="1" stop-color="#704027"/>
+    </linearGradient>
+    <linearGradient id="muzzle" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F1D29A"/>
+      <stop offset="1" stop-color="#D7A96B"/>
+    </linearGradient>
+    <linearGradient id="ear" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#D59A62"/>
+      <stop offset="1" stop-color="#9A5D34"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#17171B" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+
+  <!-- restrained retro badge: an original studio-mascot silhouette -->
+  <ellipse cx="150" cy="222" rx="86" ry="12" fill="#17171B" opacity="0.16"/>
+  <g filter="url(#shadow)">
+    <path d="M87 77 C82 48 103 35 126 49 C140 34 160 34 175 49 C199 35 220 49 214 78 C235 96 237 141 215 169 C197 194 172 204 150 204 C128 204 103 194 85 169 C63 141 65 96 87 77Z" fill="url(#fur)" stroke="#2B2522" stroke-width="7" stroke-linejoin="round"/>
+    <ellipse cx="74" cy="112" rx="29" ry="35" fill="url(#ear)" stroke="#2B2522" stroke-width="7"/>
+    <ellipse cx="226" cy="112" rx="29" ry="35" fill="url(#ear)" stroke="#2B2522" stroke-width="7"/>
+
+    <!-- geometric ear badges -->
+    <path d="M60 108 L74 91 L88 108 L74 125Z" fill="#D77A46" stroke="#2B2522" stroke-width="4"/>
+    <path d="M212 108 L226 91 L240 108 L226 125Z" fill="#D77A46" stroke="#2B2522" stroke-width="4"/>
+
+    <!-- subtle forehead mark -->
+    <path d="M132 53 Q150 39 168 53 L158 67 Q150 60 142 67Z" fill="#E0A15F" stroke="#2B2522" stroke-width="4" stroke-linejoin="round"/>
+
+    <ellipse cx="150" cy="141" rx="69" ry="48" fill="url(#muzzle)" stroke="#2B2522" stroke-width="5"/>
+
+    <!-- calm, expressive eyes -->
+    <path d="M103 108 Q116 97 130 108" fill="none" stroke="#2B2522" stroke-width="6" stroke-linecap="round"/>
+    <path d="M170 108 Q184 97 197 108" fill="none" stroke="#2B2522" stroke-width="6" stroke-linecap="round"/>
+    <ellipse cx="117" cy="121" rx="10" ry="15" fill="#25262A"/>
+    <ellipse cx="183" cy="121" rx="10" ry="15" fill="#25262A"/>
+    <circle cx="121" cy="116" r="3.5" fill="#FFF9E9"/>
+    <circle cx="187" cy="116" r="3.5" fill="#FFF9E9"/>
+
+    <!-- understated cheeks -->
+    <path d="M88 143 Q101 135 113 143" fill="none" stroke="#C66D4D" stroke-width="6" stroke-linecap="round" opacity="0.75"/>
+    <path d="M187 143 Q199 135 212 143" fill="none" stroke="#C66D4D" stroke-width="6" stroke-linecap="round" opacity="0.75"/>
+
+    <path d="M143 132 Q150 127 157 132 L154 139 Q150 142 146 139Z" fill="#5B3324"/>
+    <path d="M132 151 Q150 164 168 151" fill="none" stroke="#5B3324" stroke-width="6" stroke-linecap="round"/>
+    <path d="M143 157 Q150 162 157 157" fill="none" stroke="#C66D4D" stroke-width="4" stroke-linecap="round"/>
+
+    <!-- tiny asymmetrical studio mark -->
+    <path d="M211 68 L216 78 L226 83 L216 88 L211 99 L206 88 L196 83 L206 78Z" fill="#E7B56E" stroke="#2B2522" stroke-width="3"/>
+  </g>
+</svg>
