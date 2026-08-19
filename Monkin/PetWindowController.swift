@@ -26,7 +26,7 @@ final class PetWindowController: NSWindowController {
     private var lastEatenAt = Date.distantPast
 
     init() {
-        petView = PetView(frame: NSRect(x: 270, y: 10, width: 152, height: 152))
+        petView = PetView(frame: NSRect(x: 294, y: 10, width: 128, height: 128))
         thoughtBubble = ThoughtBubbleView(frame: NSRect(x: 0, y: 116, width: 300, height: 110))
         let rootView = NSView(frame: NSRect(x: 0, y: 0, width: 440, height: 230))
         rootView.addSubview(thoughtBubble)
