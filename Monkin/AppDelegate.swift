@@ -16,9 +16,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
         petWindow = PetWindowController()
-        petWindow.showWindow(nil)
+        // Order the floating pet without activating Monkin or stealing the
+        // key window from the editor that launched/restarted it.
         petWindow.window?.orderFrontRegardless()
-        NSApp.activate(ignoringOtherApps: true)
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {

@@ -55,7 +55,7 @@ build_and_restart() {
   fi
 
   stop_running_client
-  open --new "$DEV_APP"
+  open -g --new "$DEV_APP"
 }
 
 build_and_restart

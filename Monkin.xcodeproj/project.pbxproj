@@ -18,6 +18,7 @@
 		B4F5D5372C607E5B70112553 /* monkin-coffeehouse.svg in Resources */ = {isa = PBXBuildFile; fileRef = BF6AECE4060D86371CB314E9 /* monkin-coffeehouse.svg */; };
 		D502A9BE31595552099B99C3 /* monkin-retro.svg in Resources */ = {isa = PBXBuildFile; fileRef = CD95B63B7358EF9078B96935 /* monkin-retro.svg */; };
 		E2412D920C8C9E5BC647F277 /* monkin-starry.svg in Resources */ = {isa = PBXBuildFile; fileRef = 59BA87D48AADD7F0BF321536 /* monkin-starry.svg */; };
+		E66EB09F3244E7DCF0874E76 /* MonkinMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA259F8011B91DC7749D9783 /* MonkinMotion.swift */; };
 		E78DCA17291B52030902A2EE /* PetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3553E2E4B7888DE53F62A953 /* PetView.swift */; };
 		F5AD178202705C44748AAEC8 /* monkin-zen-desk.svg in Resources */ = {isa = PBXBuildFile; fileRef = 1BAA124D665540F62015C322 /* monkin-zen-desk.svg */; };
 /* End PBXBuildFile section */
@@ -39,6 +40,7 @@
 		BF7DB7304AD48EB98CF8A525 /* Monkin.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Monkin.entitlements; sourceTree = "<group>"; };
 		CD95B63B7358EF9078B96935 /* monkin-retro.svg */ = {isa = PBXFileReference; path = "monkin-retro.svg"; sourceTree = "<group>"; };
 		DFB73B8762E37249E13E7BCB /* MonkinPose.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkinPose.swift; sourceTree = "<group>"; };
+		FA259F8011B91DC7749D9783 /* MonkinMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkinMotion.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -49,6 +51,7 @@
 				B35915515ED8A57FBE6807EE /* Info.plist */,
 				BF7DB7304AD48EB98CF8A525 /* Monkin.entitlements */,
 				238AF9B0C44C5C6B2B6E2E8F /* MonkinFigureSpec.swift */,
+				FA259F8011B91DC7749D9783 /* MonkinMotion.swift */,
 				DFB73B8762E37249E13E7BCB /* MonkinPose.swift */,
 				374FBC3AE5F8FDE54C48AE0C /* MonkinSVGRenderer.swift */,
 				B2190F3BA291F55E016409E5 /* MonkinThought.swift */,
@@ -165,6 +168,7 @@
 			files = (
 				580F3518DAFB2DF82C71F30E /* AppDelegate.swift in Sources */,
 				3A0AAF31F043FE5EBED3C1D6 /* MonkinFigureSpec.swift in Sources */,
+				E66EB09F3244E7DCF0874E76 /* MonkinMotion.swift in Sources */,
 				B32D628204B236FB0E7ADA29 /* MonkinPose.swift in Sources */,
 				1C40EF371DE2E7F8CFD17BA6 /* MonkinSVGRenderer.swift in Sources */,
 				B0086B42D28ACA7E9CB786C7 /* MonkinThought.swift in Sources */,

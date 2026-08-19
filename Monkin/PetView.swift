@@ -87,6 +87,46 @@ final class PetView: NSView {
             advanceJump()
             return
         }
+        if motionStyle == "wave" {
+            advanceWave()
+            return
+        }
+        if motionStyle == "celebrate" {
+            advanceCelebrate()
+            return
+        }
+        if motionStyle == "peek" {
+            advancePeek()
+            return
+        }
+        if motionStyle == "sleepy" {
+            advanceSleepy()
+            return
+        }
+        if motionStyle == "scratch" {
+            advanceScratch()
+            return
+        }
+        if motionStyle == "tiptoe" {
+            advanceTiptoe()
+            return
+        }
+        if motionStyle == "spin" {
+            advanceSpin()
+            return
+        }
+        if motionStyle == "stumble" {
+            advanceStumble()
+            return
+        }
+        if motionStyle == "hide" {
+            advanceHide()
+            return
+        }
+        if motionStyle == "stretch" {
+            advanceStretch()
+            return
+        }
         if motionStyle == "wriggle" {
             advanceWriggle()
             return
@@ -133,6 +173,170 @@ final class PetView: NSView {
             tailRotation: push * 14
         )
         setPose(pose)
+    }
+
+    private func advanceWave() {
+        let wave = sin(motionPhase * 5.0)
+        setPose(MonkinPose(
+            bodyBob: sin(motionPhase * 2) * 2,
+            headRotation: sin(motionPhase * 2) * 3,
+            leftArmRotation: -8,
+            rightArmRotation: -48 + wave * 28,
+            rightArmOffsetY: 4 + abs(wave) * 3,
+            leftLegRotation: sin(motionPhase * 2) * 3,
+            rightLegRotation: -sin(motionPhase * 2) * 3,
+            tailRotation: sin(motionPhase * 2) * 8
+        ))
+    }
+
+    private func advanceCelebrate() {
+        let bounce = abs(sin(motionPhase * 3.4))
+        let sway = sin(motionPhase * 3.4)
+        setPose(MonkinPose(
+            bodyBob: bounce * 6,
+            bodyScaleX: 1.0 + bounce * 0.12,
+            bodyScaleY: 0.91 - bounce * 0.10,
+            headRotation: sway * 5,
+            headOffsetY: bounce * 5,
+            leftArmRotation: -55 - sway * 12,
+            rightArmRotation: 55 - sway * 12,
+            leftArmOffsetY: bounce * 4,
+            rightArmOffsetY: bounce * 4,
+            leftLegRotation: sway * 10,
+            rightLegRotation: -sway * 10,
+            tailRotation: sway * 24
+        ))
+    }
+
+    private func advancePeek() {
+        let peek = (sin(motionPhase * 2.2) + 1) / 2
+        setPose(MonkinPose(
+            bodyBob: -peek * 6,
+            bodyScaleX: 0.94 + peek * 0.06,
+            bodyScaleY: 0.94 + peek * 0.06,
+            headRotation: -4 + peek * 8,
+            headOffsetY: -10 + peek * 12,
+            headScaleX: 0.94 + peek * 0.06,
+            headScaleY: 0.94 + peek * 0.06,
+            leftArmRotation: 22 - peek * 20,
+            rightArmRotation: -22 + peek * 20,
+            leftArmOffsetY: -peek * 6,
+            rightArmOffsetY: -peek * 6,
+            tailRotation: -18 + peek * 30
+        ))
+    }
+
+    private func advanceSleepy() {
+        let nod = sin(motionPhase * 1.25)
+        setPose(MonkinPose(
+            bodyBob: abs(nod) * 1.5,
+            headRotation: nod * 5,
+            headOffsetY: -abs(nod) * 2,
+            leftArmRotation: 8 + nod * 3,
+            rightArmRotation: -8 + nod * 3,
+            leftLegRotation: -2,
+            rightLegRotation: 2,
+            tailRotation: -8 + nod * 4
+        ))
+    }
+
+    private func advanceScratch() {
+        let scratch = sin(motionPhase * 9)
+        setPose(MonkinPose(
+            bodyBob: abs(scratch) * 2,
+            headRotation: sin(motionPhase * 2) * 4,
+            leftArmRotation: 50 + max(0, scratch) * 20,
+            rightArmRotation: -50 + min(0, scratch) * 20,
+            leftArmOffsetY: abs(scratch) * 8,
+            rightArmOffsetY: abs(scratch) * 8,
+            tailRotation: sin(motionPhase * 3) * 12
+        ))
+    }
+
+    private func advanceTiptoe() {
+        let step = sin(motionPhase * 4)
+        setPose(MonkinPose(
+            bodyBob: abs(step) * 3,
+            bodyScaleX: 0.96,
+            bodyScaleY: 1.04,
+            headRotation: step * 3,
+            headOffsetY: abs(step) * 3,
+            leftArmRotation: -12 + step * 8,
+            rightArmRotation: 12 + step * 8,
+            leftLegRotation: step * 16,
+            rightLegRotation: -step * 16,
+            tailRotation: step * 15
+        ))
+    }
+
+    private func advanceSpin() {
+        let spin = sin(motionPhase * 3)
+        setPose(MonkinPose(
+            bodyBob: abs(spin) * 4,
+            bodyScaleX: 0.92 + abs(spin) * 0.08,
+            bodyScaleY: 1.0,
+            headRotation: spin * 15,
+            headOffsetY: abs(spin) * 4,
+            leftArmRotation: spin * 35,
+            rightArmRotation: -spin * 35,
+            leftLegRotation: -spin * 18,
+            rightLegRotation: spin * 18,
+            tailRotation: spin * 35
+        ))
+    }
+
+    private func advanceStumble() {
+        let stumble = sin(motionPhase * 2.7)
+        setPose(MonkinPose(
+            bodyBob: abs(stumble) * 4,
+            bodyScaleX: 1.0 + abs(stumble) * 0.08,
+            bodyScaleY: 0.94 - abs(stumble) * 0.06,
+            headRotation: stumble * 18,
+            headOffsetY: -abs(stumble) * 4,
+            leftArmRotation: -20 - stumble * 35,
+            rightArmRotation: 20 - stumble * 35,
+            leftArmOffsetY: -stumble * 5,
+            rightArmOffsetY: stumble * 5,
+            leftLegRotation: stumble * 22,
+            rightLegRotation: stumble * 8,
+            tailRotation: -stumble * 30
+        ))
+    }
+
+    private func advanceHide() {
+        let hide = (sin(motionPhase * 2.2) + 1) / 2
+        setPose(MonkinPose(
+            bodyBob: -hide * 5,
+            bodyScaleX: 0.72 + hide * 0.28,
+            bodyScaleY: 0.72 + hide * 0.28,
+            headRotation: -5 + hide * 10,
+            headOffsetY: -18 + hide * 18,
+            headScaleX: 0.78 + hide * 0.22,
+            headScaleY: 0.78 + hide * 0.22,
+            leftArmRotation: 12,
+            rightArmRotation: -12,
+            tailRotation: -20 + hide * 40
+        ))
+    }
+
+    private func advanceStretch() {
+        let stretch = sin(motionPhase * 1.8)
+        setPose(MonkinPose(
+            bodyBob: -stretch * 3,
+            bodyScaleX: 1.0 - stretch * 0.10,
+            bodyScaleY: 1.0 + stretch * 0.16,
+            headRotation: stretch * 3,
+            headOffsetY: stretch * 5,
+            headScaleX: 1.0 - stretch * 0.04,
+            headScaleY: 1.0 + stretch * 0.08,
+            leftArmRotation: -18 - stretch * 16,
+            rightArmRotation: 18 + stretch * 16,
+            leftArmOffsetY: stretch * 7,
+            rightArmOffsetY: stretch * 7,
+            leftLegRotation: -stretch * 8,
+            rightLegRotation: stretch * 8,
+            tailRotation: stretch * 18
+        ))
     }
 
     private func advanceJump() {

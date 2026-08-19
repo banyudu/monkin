@@ -6,12 +6,16 @@ final class PetWindowController: NSWindowController {
     private let thoughtProvider: MonkinThoughtProvider = CodexThoughtProvider()
     private var thoughtTimer: Timer?
     private var roamTimer: Timer?
+    private var actionTimer: Timer?
     private var roamDirection: CGFloat = 1
     private var roamTime: CGFloat = 0
     private var jumpTime: CGFloat = 0
+    private var motionIndex = 0
+    private var roamTarget = NSPoint.zero
+    private var hasRoamTarget = false
 
     init() {
-        petView = PetView(frame: NSRect(x: 230, y: 10, width: 190, height: 190))
+        petView = PetView(frame: NSRect(x: 270, y: 10, width: 152, height: 152))
         thoughtBubble = ThoughtBubbleView(frame: NSRect(x: 0, y: 126, width: 270, height: 90))
         let rootView = NSView(frame: NSRect(x: 0, y: 0, width: 440, height: 230))
         rootView.addSubview(thoughtBubble)
@@ -39,6 +43,7 @@ final class PetWindowController: NSWindowController {
             self?.speak()
             self?.scheduleNextThought()
             self?.scheduleRoaming()
+            self?.scheduleRandomMotion()
         }
     }
 
@@ -50,6 +55,7 @@ final class PetWindowController: NSWindowController {
         thoughtProvider.nextThought { [weak self] thought in
             guard let self, let thought else { return }
             self.petView.setFigure(thought.figure)
+            self.petView.setMotionStyle(thought.motionStyle)
             self.thoughtBubble.show(text: thought.text, for: thought.visibleDuration)
         }
     }
@@ -78,6 +84,7 @@ final class PetWindowController: NSWindowController {
         petView.setMotionStyle("wriggle")
         roamTime = 0
         jumpTime = 0
+        hasRoamTarget = false
         roamTimer?.invalidate()
         roamTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 30.0, repeats: true) { [weak self] _ in
             self?.advanceRoaming()
@@ -87,46 +94,78 @@ final class PetWindowController: NSWindowController {
     func stopRoaming() {
         roamTimer?.invalidate()
         roamTimer = nil
+        actionTimer?.invalidate()
+        actionTimer = nil
         petView.setMotionStyle("idle")
+    }
+
+    private func scheduleRandomMotion() {
+        actionTimer?.invalidate()
+        actionTimer = Timer.scheduledTimer(withTimeInterval: 6, repeats: false) { [weak self] _ in
+            self?.performNextMotion()
+            self?.scheduleRandomMotion()
+        }
+    }
+
+    private func performNextMotion() {
+        guard jumpTime <= 0 else { return }
+        let styles = MonkinMotion.expressive
+        motionIndex = (motionIndex + 1) % styles.count
+        petView.setMotionStyle(styles[motionIndex])
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [weak self] in
+            guard let self, self.jumpTime <= 0 else { return }
+            self.petView.setMotionStyle("wriggle")
+        }
     }
 
     private func advanceRoaming() {
         guard let window, let screen = window.screen ?? NSScreen.main else { return }
         roamTime += 1.0 / 30.0
+        let visible = screen.visibleFrame
+        let frame = window.frame
+        let minX = visible.minX + 12
+        let maxX = visible.maxX - frame.width - 12
+        let minY = visible.minY + 18
+        let maxY = max(minY, visible.maxY - frame.height - 18)
+
+        if !hasRoamTarget {
+            roamTarget = NSPoint(x: CGFloat.random(in: minX...maxX),
+                                 y: CGFloat.random(in: minY...maxY))
+            hasRoamTarget = true
+        }
+
         if jumpTime > 0 {
             jumpTime -= 1.0 / 30.0
             petView.setMotionStyle("jump")
         } else if roamTime > 4.5 {
             roamTime = 0
             jumpTime = 1.05
+            roamTarget = NSPoint(x: CGFloat.random(in: minX...maxX),
+                                 y: CGFloat.random(in: minY...maxY))
             petView.setMotionStyle("jump")
-        } else {
-            petView.setMotionStyle("wriggle")
         }
-        let visible = screen.visibleFrame
-        let frame = window.frame
-        // A jump carries Monkin farther than its tiny wriggle steps.
-        let step: CGFloat = (jumpTime > 0 ? 5.5 : 1.25) * roamDirection
-        var nextX = frame.origin.x + step
+
+        let speed: CGFloat = jumpTime > 0 ? 5.5 : 1.25
+        let dx = roamTarget.x - frame.origin.x
+        let dy = roamTarget.y - frame.origin.y
+        let distance = max(1, hypot(dx, dy))
+        let nextX = frame.origin.x + dx / distance * min(speed, abs(dx) + abs(dy) > 0 ? speed : 0)
+        let nextY = frame.origin.y + dy / distance * min(speed, abs(dx) + abs(dy) > 0 ? speed : 0)
         let jumpProgress = jumpTime > 0 ? (1.05 - jumpTime) / 1.05 : 0
         let jumpArc = sin(jumpProgress * .pi) * 92
-        let minX = visible.minX + 12
-        let maxX = visible.maxX - frame.width - 12
+        let clampedX = min(max(nextX, minX), maxX)
+        let clampedY = min(max(nextY + jumpArc, minY), maxY)
+        window.setFrameOrigin(NSPoint(x: clampedX, y: clampedY))
 
-        if nextX <= minX {
-            nextX = minX
-            roamDirection = 1
-        } else if nextX >= maxX {
-            nextX = maxX
-            roamDirection = -1
+        if distance < 8 && jumpTime <= 0 {
+            hasRoamTarget = false
         }
-
-        window.setFrameOrigin(NSPoint(x: nextX, y: visible.minY + 18 + jumpArc))
     }
 
     deinit {
         thoughtTimer?.invalidate()
         roamTimer?.invalidate()
+        actionTimer?.invalidate()
     }
 
     @available(*, unavailable)

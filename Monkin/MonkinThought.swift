@@ -4,6 +4,14 @@ struct MonkinThought {
     let text: String
     let figure: MonkinFigureSpec
     let visibleDuration: TimeInterval
+    let motionStyle: String
+
+    init(text: String, figure: MonkinFigureSpec, visibleDuration: TimeInterval, motionStyle: String = "idle") {
+        self.text = text
+        self.figure = figure
+        self.visibleDuration = visibleDuration
+        self.motionStyle = motionStyle
+    }
 }
 
 protocol MonkinThoughtProvider {
@@ -63,11 +71,13 @@ final class CodexThoughtProvider: MonkinThoughtProvider {
         let accessories: [String]?
         let accent: String?
         let visibleDuration: Double?
+        let motion: String?
     }
 
     private let fallback: MonkinThoughtProvider
     private var requestInFlight = false
     private let lock = NSLock()
+    private var topicIndex = 0
 
     init(fallback: MonkinThoughtProvider = LocalThoughtProvider()) {
         self.fallback = fallback
@@ -119,11 +129,18 @@ final class CodexThoughtProvider: MonkinThoughtProvider {
         process.standardError = FileHandle.nullDevice
         do {
             try process.run()
+            let topics = ["窗边的光影", "桌面上的植物", "空气里的声音", "一件被遗忘的小物件", "今天的天气", "影子和反光", "一个奇怪的梦", "人类的习惯"]
+            lock.lock()
+            let topic = topics[topicIndex % topics.count]
+            topicIndex += 1
+            lock.unlock()
             let prompt = """
             你是 Monkin，一个住在用户桌面上的成年人的可爱猴子宠物。请用自然、机灵、略带荒诞的中文和主人说一句话，像真的有自己的观察和小脾气。不要说教，不要解释你是 AI，不要使用 markdown。可以逗主人、提出古怪问题、描述你刚才想做的事情，也可以暗示身体动作（比如蛄蛹、突然起跳、躲到屏幕后面）。
 
+            本次优先围绕“\(topic)”说话。请保持主题多样，不要总是围绕鼠标、光标、键盘或咖啡；它们偶尔可以出现，但不要连续重复。每次尽量换一个观察角度。
+
             只返回一个合法 JSON 对象，不要代码块：
-            {"text":"不超过45字的台词","eyes":"neutral|happy|sad|curious|sleepy","brows":"relaxed|raised|worried","mouth":"neutral|smile|open|sad|smirk","cheeks":"light 或 null","accessories":["coffee|spark|question-mark|moon"],"accent":"#RRGGBB","visibleDuration":7}
+            {"text":"不超过45字的台词","eyes":"neutral|happy|sad|curious|sleepy","brows":"relaxed|raised|worried","mouth":"neutral|smile|open|sad|smirk","cheeks":"light 或 null","accessories":["coffee|spark|question-mark|moon"],"accent":"#RRGGBB","visibleDuration":7,"motion":"idle|wriggle|jump|wave|celebrate|peek|sleepy|scratch|tiptoe|spin|stumble|hide|stretch"}
             """
             input.fileHandleForWriting.write(prompt.data(using: .utf8)!)
             try input.fileHandleForWriting.close()
@@ -155,10 +172,12 @@ final class CodexThoughtProvider: MonkinThoughtProvider {
         let accessories = (payload.accessories ?? []).filter { ["coffee", "spark", "question-mark", "moon"].contains($0) }.prefix(2)
         let accent = payload.accent?.hasPrefix("#") == true ? payload.accent! : "#4A7772"
         let duration = min(max(payload.visibleDuration ?? 7, 4), 12)
+        let motion = MonkinMotion.all.contains(payload.motion ?? "") ? payload.motion! : "idle"
         return MonkinThought(text: text,
                              figure: MonkinFigureSpec(eyes: eyes, brows: brows, mouth: mouth,
                                                       cheeks: payload.cheeks == "light" ? "light" : nil,
                                                       accessories: Array(accessories), colors: ["accent": accent]),
-                             visibleDuration: duration)
+                             visibleDuration: duration,
+                             motionStyle: motion)
     }
 }
