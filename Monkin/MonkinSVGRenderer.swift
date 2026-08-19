@@ -2,7 +2,11 @@ import AppKit
 
 final class MonkinSVGRenderer {
     func image(for spec: MonkinFigureSpec) -> NSImage? {
-        let svg = render(spec)
+        image(for: spec, pose: .neutral)
+    }
+
+    func image(for spec: MonkinFigureSpec, pose: MonkinPose) -> NSImage? {
+        let svg = render(spec, pose: pose)
         let data = Data(svg.utf8)
         let url = FileManager.default.temporaryDirectory
             .appendingPathComponent("monkin-\(UUID().uuidString).svg")
@@ -17,6 +21,10 @@ final class MonkinSVGRenderer {
     }
 
     func render(_ spec: MonkinFigureSpec) -> String {
+        render(spec, pose: .neutral)
+    }
+
+    func render(_ spec: MonkinFigureSpec, pose: MonkinPose) -> String {
         let accent = color(spec.colors["accent"], fallback: "#4A7772")
         let layers = [
             material("eyes", named: spec.eyes),
@@ -27,7 +35,7 @@ final class MonkinSVGRenderer {
 
         let accessories = spec.accessories.map { material("accessory", named: $0, accent: accent) }.joined()
         return """
-        <svg xmlns="http://www.w3.org/2000/svg" width="300" height="250" viewBox="0 0 300 250">
+        <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
           <defs>
             <linearGradient id="fur" x1="0" y1="0" x2="0.8" y2="1">
               <stop offset="0" stop-color="#C48751"/><stop offset="0.58" stop-color="#9A5D34"/><stop offset="1" stop-color="#704027"/>
@@ -39,17 +47,43 @@ final class MonkinSVGRenderer {
               <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#17171B" flood-opacity="0.28"/>
             </filter>
           </defs>
-          <ellipse cx="150" cy="222" rx="86" ry="12" fill="#17171B" opacity="0.16"/>
+          <ellipse cx="150" cy="286" rx="78" ry="9" fill="#17171B" opacity="0.16"/>
           <g filter="url(#shadow)">
-            <path d="M87 77 C82 48 103 35 126 49 C140 34 160 34 175 49 C199 35 220 49 214 78 C235 96 237 141 215 169 C197 194 172 204 150 204 C128 204 103 194 85 169 C63 141 65 96 87 77Z" fill="url(#fur)" stroke="#2B2522" stroke-width="7" stroke-linejoin="round"/>
-            <ellipse cx="74" cy="112" rx="29" ry="35" fill="#B97A4D" stroke="#2B2522" stroke-width="7"/>
-            <ellipse cx="226" cy="112" rx="29" ry="35" fill="#B97A4D" stroke="#2B2522" stroke-width="7"/>
-            <path d="M62 111 Q74 97 86 111 Q74 126 62 111Z" fill="#4A7772" stroke="#2B2522" stroke-width="4"/>
-            <path d="M214 111 Q226 97 238 111 Q226 126 214 111Z" fill="#4A7772" stroke="#2B2522" stroke-width="4"/>
-            <path d="M119 58 Q132 39 149 52 Q165 38 181 58 Q165 65 150 61 Q135 66 119 58Z" fill="#C88750" stroke="#2B2522" stroke-width="5" stroke-linejoin="round"/>
-            <ellipse cx="150" cy="141" rx="69" ry="48" fill="url(#muzzle)" stroke="#2B2522" stroke-width="5"/>
+            <g transform="translate(0 \(pose.bodyBob)) translate(150 190) scale(\(pose.bodyScaleX) \(pose.bodyScaleY)) translate(-150 -190)">
+              <g transform="translate(199 164) rotate(\(pose.tailRotation))">
+                <path d="M0 0 Q42 -4 56 29 Q72 66 48 92 Q35 106 20 100" fill="none" stroke="#704027" stroke-width="18" stroke-linecap="round"/>
+                <path d="M3 0 Q39 0 51 30" fill="none" stroke="#C48751" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+              </g>
+              <path d="M103 145 Q150 119 197 145 L198 229 Q183 253 150 255 Q117 253 102 229Z" fill="url(#fur)" stroke="#2B2522" stroke-width="7"/>
+              <path d="M126 150 Q150 137 174 150 L176 217 Q150 236 124 217Z" fill="url(#muzzle)" opacity="0.86"/>
+              <g transform="translate(105 \(151 + pose.leftArmOffsetY)) rotate(\(pose.leftArmRotation))">
+                <path d="M0 0 Q-15 25 -18 63 Q-15 76 -5 71 Q1 46 20 25Z" fill="url(#fur)" stroke="#2B2522" stroke-width="7" stroke-linejoin="round"/>
+                <ellipse cx="-10" cy="70" rx="14" ry="11" fill="#D7A66B" stroke="#2B2522" stroke-width="5"/>
+              </g>
+              <g transform="translate(195 \(151 + pose.rightArmOffsetY)) rotate(\(pose.rightArmRotation))">
+                <path d="M0 0 Q15 25 18 63 Q15 76 5 71 Q-1 46 -20 25Z" fill="url(#fur)" stroke="#2B2522" stroke-width="7" stroke-linejoin="round"/>
+                <ellipse cx="10" cy="70" rx="14" ry="11" fill="#D7A66B" stroke="#2B2522" stroke-width="5"/>
+              </g>
+              <g transform="translate(125 236) rotate(\(pose.leftLegRotation))">
+                <path d="M0 0 Q-3 17 -2 31" fill="none" stroke="#704027" stroke-width="25" stroke-linecap="round"/>
+                <ellipse cx="-2" cy="38" rx="25" ry="12" fill="#A96235" stroke="#2B2522" stroke-width="6"/>
+              </g>
+              <g transform="translate(175 236) rotate(\(pose.rightLegRotation))">
+                <path d="M0 0 Q3 17 2 31" fill="none" stroke="#704027" stroke-width="25" stroke-linecap="round"/>
+                <ellipse cx="2" cy="38" rx="25" ry="12" fill="#A96235" stroke="#2B2522" stroke-width="6"/>
+              </g>
+            </g>
+            <g transform="translate(0 \(pose.bodyBob + pose.headOffsetY)) translate(150 150) rotate(\(pose.headRotation)) scale(\(pose.headScaleX) \(pose.headScaleY)) translate(-150 -150)">
+              <path d="M91 76 C84 53 102 38 125 50 Q150 31 175 50 C198 38 216 53 209 76 Q231 95 225 132 C219 169 188 190 150 190 C112 190 81 169 75 132 Q69 95 91 76Z" fill="url(#fur)" stroke="#2B2522" stroke-width="7" stroke-linejoin="round"/>
+              <ellipse cx="67" cy="111" rx="25" ry="31" fill="#B97A4D" stroke="#2B2522" stroke-width="7"/>
+              <ellipse cx="233" cy="111" rx="25" ry="31" fill="#B97A4D" stroke="#2B2522" stroke-width="7"/>
+              <path d="M57 111 Q67 99 77 111 Q67 123 57 111Z" fill="#4A7772" stroke="#2B2522" stroke-width="4"/>
+              <path d="M223 111 Q233 99 243 111 Q233 123 223 111Z" fill="#4A7772" stroke="#2B2522" stroke-width="4"/>
+              <path d="M123 55 Q137 37 150 51 Q164 36 178 56 Q164 65 150 60 Q136 65 123 55Z" fill="#C88750" stroke="#2B2522" stroke-width="5" stroke-linejoin="round"/>
+              <ellipse cx="150" cy="139" rx="57" ry="39" fill="url(#muzzle)" stroke="#2B2522" stroke-width="5"/>
             \(layers)
             \(accessories)
+            </g>
           </g>
         </svg>
         """

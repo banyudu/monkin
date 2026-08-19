@@ -1,13 +1,18 @@
 import AppKit
 
 final class PetView: NSView {
+    var onTap: (() -> Void)?
     private let furColor = NSColor(calibratedRed: 0.58, green: 0.30, blue: 0.13, alpha: 1)
     private let bellyColor = NSColor(calibratedRed: 0.94, green: 0.72, blue: 0.43, alpha: 1)
     private let accentColor = NSColor(calibratedRed: 0.45, green: 0.34, blue: 0.82, alpha: 1)
     private let renderer = MonkinSVGRenderer()
     private var figureSpec = MonkinFigureSpec.default
     private var renderedImage: NSImage?
+    private var pose = MonkinPose.neutral
+    private var motionPhase: CGFloat = 0
+    private var motionStyle = "idle"
     private var blinkTimer: Timer?
+    private var motionTimer: Timer?
     private var isBlinking = false
 
     override init(frame frameRect: NSRect) {
@@ -16,6 +21,9 @@ final class PetView: NSView {
         renderedImage = renderer.image(for: figureSpec)
         blinkTimer = Timer.scheduledTimer(withTimeInterval: 3.8, repeats: true) { [weak self] _ in
             self?.blink()
+        }
+        motionTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 12.0, repeats: true) { [weak self] _ in
+            self?.advanceMotion()
         }
     }
 
@@ -26,6 +34,7 @@ final class PetView: NSView {
 
     deinit {
         blinkTimer?.invalidate()
+        motionTimer?.invalidate()
     }
 
     override func draw(_ dirtyRect: NSRect) {
@@ -50,12 +59,102 @@ final class PetView: NSView {
         context?.restoreGState()
     }
 
+    override func mouseDown(with event: NSEvent) {
+        onTap?()
+    }
+
     /// Rebuilds the SVG immediately from a dynamic material specification.
     /// A future conversation/LLM layer can call this with decoded JSON.
     func setFigure(_ spec: MonkinFigureSpec) {
         figureSpec = spec
-        renderedImage = renderer.image(for: spec)
+        renderedImage = renderer.image(for: spec, pose: pose)
         needsDisplay = true
+    }
+
+    func setPose(_ pose: MonkinPose) {
+        self.pose = pose
+        renderedImage = renderer.image(for: figureSpec, pose: pose)
+        needsDisplay = true
+    }
+
+    func setMotionStyle(_ style: String) {
+        motionStyle = style
+    }
+
+    private func advanceMotion() {
+        motionPhase += 0.12
+        if motionStyle == "jump" {
+            advanceJump()
+            return
+        }
+        if motionStyle == "wriggle" {
+            advanceWriggle()
+            return
+        }
+
+        let sway = sin(motionPhase * 2.0)
+        let walk = sin(motionPhase * 3.0)
+        var nextPose = MonkinPose(
+            bodyBob: sin(motionPhase * 2.0) * 2.0,
+            headRotation: sway * 2.5,
+            leftArmRotation: sway * 3.0,
+            rightArmRotation: -sway * 3.0,
+            leftLegRotation: walk * 4.0,
+            rightLegRotation: -walk * 4.0,
+            tailRotation: sway * 5.0
+        )
+
+        let waveCycle = motionPhase.truncatingRemainder(dividingBy: 18)
+        if waveCycle > 10 && waveCycle < 13 {
+            nextPose.rightArmRotation = -35 + sin(motionPhase * 8) * 22
+        }
+        setPose(nextPose)
+    }
+
+    private func advanceWriggle() {
+        let cycle = motionPhase * 2.4
+        let push = sin(cycle)
+        let crunch = abs(sin(cycle))
+        let reach = max(0, sin(cycle + .pi / 2))
+        let pose = MonkinPose(
+            bodyBob: crunch * 3.5,
+            bodyScaleX: 1.0 + crunch * 0.10,
+            bodyScaleY: 0.88 - crunch * 0.08,
+            headRotation: push * 7,
+            headOffsetY: 4 + crunch * 4,
+            headScaleX: 1.0 + crunch * 0.06,
+            headScaleY: 1.0 - crunch * 0.08,
+            leftArmRotation: 18 + reach * 34,
+            rightArmRotation: -18 - max(0, sin(cycle - 0.9)) * 34,
+            leftArmOffsetY: -reach * 5,
+            rightArmOffsetY: -max(0, sin(cycle - 0.9)) * 5,
+            leftLegRotation: -push * 12,
+            rightLegRotation: push * 12,
+            tailRotation: push * 14
+        )
+        setPose(pose)
+    }
+
+    private func advanceJump() {
+        let phase = motionPhase.truncatingRemainder(dividingBy: 2.0 * .pi)
+        let lift = max(0, sin(phase))
+        let tuck = max(0, sin(phase))
+        setPose(MonkinPose(
+            bodyBob: lift * 5,
+            bodyScaleX: 1.0 + tuck * 0.12,
+            bodyScaleY: 0.92 - tuck * 0.10,
+            headRotation: sin(phase * 0.7) * 5,
+            headOffsetY: lift * 5,
+            headScaleX: 1.0 + tuck * 0.05,
+            headScaleY: 1.0 - tuck * 0.06,
+            leftArmRotation: -28 - lift * 32,
+            rightArmRotation: 28 + lift * 32,
+            leftArmOffsetY: -lift * 5,
+            rightArmOffsetY: -lift * 5,
+            leftLegRotation: 18 + lift * 22,
+            rightLegRotation: -18 - lift * 22,
+            tailRotation: sin(phase * 1.5) * 18
+        ))
     }
 
     private func drawBody() {
@@ -280,12 +379,12 @@ final class PetView: NSView {
         isBlinking = true
         var blinkSpec = figureSpec
         blinkSpec.eyes = "blink"
-        renderedImage = renderer.image(for: blinkSpec)
+        renderedImage = renderer.image(for: blinkSpec, pose: pose)
         needsDisplay = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.16) { [weak self] in
             self?.isBlinking = false
             guard let self else { return }
-            self.renderedImage = self.renderer.image(for: self.figureSpec)
+            self.renderedImage = self.renderer.image(for: self.figureSpec, pose: self.pose)
             self.needsDisplay = true
         }
     }
