@@ -4,9 +4,14 @@ final class PetWindowController: NSWindowController {
     let petView: PetView
     private let thoughtBubble: ThoughtBubbleView
     private let thoughtProvider: MonkinThoughtProvider = CodexThoughtProvider()
+    private let screenTextReader = ScreenTextReader()
+    private let screenWorldReader = ScreenWorldReader()
     private var thoughtTimer: Timer?
     private var roamTimer: Timer?
     private var actionTimer: Timer?
+    private var ocrTimer: Timer?
+    private var eatingTimer: Timer?
+    private var worldTimer: Timer?
     private var roamDirection: CGFloat = 1
     private var roamTime: CGFloat = 0
     private var jumpTime: CGFloat = 0
@@ -16,6 +21,9 @@ final class PetWindowController: NSWindowController {
     private var motionIndex = 0
     private var roamTarget = NSPoint.zero
     private var hasRoamTarget = false
+    private var eatingTarget: NSPoint?
+    private var lastEatenText: String?
+    private var lastEatenAt = Date.distantPast
 
     init() {
         petView = PetView(frame: NSRect(x: 270, y: 10, width: 152, height: 152))
@@ -47,6 +55,8 @@ final class PetWindowController: NSWindowController {
             self?.scheduleNextThought()
             self?.scheduleRoaming()
             self?.scheduleRandomMotion()
+            self?.scheduleScreenReading()
+            self?.scheduleWorldReading()
         }
     }
 
@@ -101,6 +111,83 @@ final class PetWindowController: NSWindowController {
         actionTimer?.invalidate()
         actionTimer = nil
         petView.setMotionStyle("idle")
+    }
+
+    private func scheduleScreenReading() {
+        screenTextReader.requestScreenRecordingAccess()
+        ocrTimer?.invalidate()
+        ocrTimer = Timer.scheduledTimer(withTimeInterval: 120, repeats: true) { [weak self] _ in
+            self?.readScreen()
+        }
+        readScreen()
+    }
+
+    private func scheduleWorldReading() {
+        screenWorldReader.requestAccessibilityAccess()
+        worldTimer?.invalidate()
+        worldTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { [weak self] _ in
+            self?.readWorld()
+        }
+        readWorld()
+    }
+
+    private func readWorld() {
+        screenWorldReader.read { [weak self] items in
+            guard let self, self.eatingTarget == nil else { return }
+            guard let target = items.first(where: { $0.isSemanticTarget && $0.label.count >= 2 &&
+                !($0.label == self.lastEatenText && Date().timeIntervalSince(self.lastEatenAt) < 600) }) else { return }
+            self.startEating(ScreenText(text: target.label, confidence: 1, screenRect: target.screenRect))
+        }
+    }
+
+    private func readScreen() {
+        screenTextReader.readMainDisplay { [weak self] items in
+            guard let self else { return }
+            let candidates = items.filter {
+                $0.confidence >= 0.55 && $0.text.count >= 2 && $0.text.count <= 48 &&
+                !($0.text == self.lastEatenText && Date().timeIntervalSince(self.lastEatenAt) < 600)
+            }
+            guard let target = candidates.min(by: { self.distance(to: $0.screenRect) < self.distance(to: $1.screenRect) }) else { return }
+            self.startEating(target)
+        }
+    }
+
+    private func distance(to rect: CGRect) -> CGFloat {
+        guard let window else { return .greatestFiniteMagnitude }
+        return hypot(rect.midX - window.frame.midX, rect.midY - window.frame.midY)
+    }
+
+    private func startEating(_ text: ScreenText) {
+        guard let window, eatingTarget == nil else { return }
+        lastEatenText = text.text
+        lastEatenAt = Date()
+        let visible = (window.screen ?? NSScreen.main)?.visibleFrame ?? .zero
+        let desired = NSPoint(x: text.screenRect.midX - petView.frame.midX,
+                              y: text.screenRect.midY - petView.frame.midY)
+        let maxX = max(visible.minX, visible.maxX - window.frame.width)
+        let maxY = max(visible.minY, visible.maxY - window.frame.height)
+        eatingTarget = NSPoint(x: min(max(desired.x, visible.minX), maxX),
+                               y: min(max(desired.y, visible.minY), maxY))
+        petView.setMotionStyle("tiptoe")
+        eatingTimer?.invalidate()
+        eatingTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 30.0, repeats: true) { [weak self] timer in
+            guard let self, let window = self.window, let target = self.eatingTarget else { timer.invalidate(); return }
+            let current = window.frame.origin
+            let dx = target.x - current.x
+            let dy = target.y - current.y
+            let distance = hypot(dx, dy)
+            if distance < 5 {
+                window.setFrameOrigin(target)
+                self.eatingTarget = nil
+                timer.invalidate()
+                self.petView.setMotionStyle("celebrate")
+                self.thoughtBubble.show(text: "nom nom…", for: 2.0)
+                return
+            }
+            let step = min(7, distance)
+            window.setFrameOrigin(NSPoint(x: current.x + dx / distance * step,
+                                          y: current.y + dy / distance * step))
+        }
     }
 
     private func scheduleRandomMotion() {
@@ -178,6 +265,9 @@ final class PetWindowController: NSWindowController {
         thoughtTimer?.invalidate()
         roamTimer?.invalidate()
         actionTimer?.invalidate()
+        ocrTimer?.invalidate()
+        eatingTimer?.invalidate()
+        worldTimer?.invalidate()
     }
 
     @available(*, unavailable)

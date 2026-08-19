@@ -15,6 +15,23 @@ open Monkin.xcodeproj
 
 Run the `Monkin` scheme from Xcode. The generated placeholder monkey can be dragged around the desktop and blinks periodically. The app is an accessory app, so it does not appear in the Dock.
 
+## Screen awareness
+
+Monkin can periodically read visible screen text using Apple Vision's on-device
+OCR. It captures the main display every two minutes, keeps each recognized
+string with its screen-space bounding rectangle, and currently walks toward one
+nearby label before showing a small `nom nom…` reaction.
+
+Every three seconds it also reads lightweight window metadata and the frontmost
+application's Accessibility tree. Buttons, sliders, text fields, menu items,
+and similar controls can become movement targets without taking a screenshot.
+
+The first scan asks for macOS Screen Recording permission. OCR has no per-call
+cost or network dependency; the tradeoff is local CPU and battery use while
+each screenshot is analyzed. The interval and target-selection policy live in
+`PetWindowController.swift`, and the reusable OCR/capture layer is in
+`ScreenTextReader.swift`.
+
 ## Direction
 
 The drawing is intentionally self-contained in `PetView.swift`, making it easy to replace with sprite sheets, an animated image, or a richer SwiftUI/AppKit character later.

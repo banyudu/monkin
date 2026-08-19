@@ -24,5 +24,7 @@
 	<string>NSApplication</string>
 	<key>LSUIElement</key>
 	<true/>
+	<key>NSScreenCaptureUsageDescription</key>
+	<string>Monkin reads screen text locally so the monkey can react to it.</string>
 </dict>
 </plist>
