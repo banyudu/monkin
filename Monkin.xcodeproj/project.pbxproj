@@ -13,10 +13,13 @@
 		3CE1A75716BE71D665DD3990 /* ScreenTextReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395F67661E4495E9A4ECF1BB /* ScreenTextReader.swift */; };
 		580F3518DAFB2DF82C71F30E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5665016EDEA8646928D618A7 /* AppDelegate.swift */; };
 		5EE2430A00A1255BA25DC397 /* PetWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E0F1586DF3634EE09F2F5A /* PetWindowController.swift */; };
+		609ACBBDC24D31789082D596 /* MonkinTelemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47064D3791B1DC4EABEABBF6 /* MonkinTelemetry.swift */; };
 		74118FD2CECB27FEA8A1B824 /* monkin-night-owl.svg in Resources */ = {isa = PBXBuildFile; fileRef = 80F4549E3AB4610B0300B685 /* monkin-night-owl.svg */; };
+		864FA3CAF4EE8C3D9CC079D1 /* WaterPoolWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BB750B782C204E48E84A203 /* WaterPoolWindow.swift */; };
 		B0086B42D28ACA7E9CB786C7 /* MonkinThought.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2190F3BA291F55E016409E5 /* MonkinThought.swift */; };
 		B32D628204B236FB0E7ADA29 /* MonkinPose.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB73B8762E37249E13E7BCB /* MonkinPose.swift */; };
 		B4F5D5372C607E5B70112553 /* monkin-coffeehouse.svg in Resources */ = {isa = PBXBuildFile; fileRef = BF6AECE4060D86371CB314E9 /* monkin-coffeehouse.svg */; };
+		D290C70A69F294D32629DAAE /* SportsPropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F53A7E4DD4E22DADE79F09 /* SportsPropView.swift */; };
 		D502A9BE31595552099B99C3 /* monkin-retro.svg in Resources */ = {isa = PBXBuildFile; fileRef = CD95B63B7358EF9078B96935 /* monkin-retro.svg */; };
 		DE469FCE45AA46044FF3FCE5 /* ScreenWorldReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2230341D1D8EC02CA480AA23 /* ScreenWorldReader.swift */; };
 		E2412D920C8C9E5BC647F277 /* monkin-starry.svg in Resources */ = {isa = PBXBuildFile; fileRef = 59BA87D48AADD7F0BF321536 /* monkin-starry.svg */; };
@@ -34,10 +37,13 @@
 		3553E2E4B7888DE53F62A953 /* PetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetView.swift; sourceTree = "<group>"; };
 		374FBC3AE5F8FDE54C48AE0C /* MonkinSVGRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkinSVGRenderer.swift; sourceTree = "<group>"; };
 		395F67661E4495E9A4ECF1BB /* ScreenTextReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTextReader.swift; sourceTree = "<group>"; };
+		47064D3791B1DC4EABEABBF6 /* MonkinTelemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkinTelemetry.swift; sourceTree = "<group>"; };
 		5665016EDEA8646928D618A7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		59BA87D48AADD7F0BF321536 /* monkin-starry.svg */ = {isa = PBXFileReference; path = "monkin-starry.svg"; sourceTree = "<group>"; };
+		6BB750B782C204E48E84A203 /* WaterPoolWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterPoolWindow.swift; sourceTree = "<group>"; };
 		80F4549E3AB4610B0300B685 /* monkin-night-owl.svg */ = {isa = PBXFileReference; path = "monkin-night-owl.svg"; sourceTree = "<group>"; };
 		81F1CBAFAAA8AA205E475E19 /* Monkin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Monkin.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9F53A7E4DD4E22DADE79F09 /* SportsPropView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsPropView.swift; sourceTree = "<group>"; };
 		B2190F3BA291F55E016409E5 /* MonkinThought.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkinThought.swift; sourceTree = "<group>"; };
 		B35915515ED8A57FBE6807EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		BF6AECE4060D86371CB314E9 /* monkin-coffeehouse.svg */ = {isa = PBXFileReference; path = "monkin-coffeehouse.svg"; sourceTree = "<group>"; };
@@ -58,12 +64,15 @@
 				FA259F8011B91DC7749D9783 /* MonkinMotion.swift */,
 				DFB73B8762E37249E13E7BCB /* MonkinPose.swift */,
 				374FBC3AE5F8FDE54C48AE0C /* MonkinSVGRenderer.swift */,
+				47064D3791B1DC4EABEABBF6 /* MonkinTelemetry.swift */,
 				B2190F3BA291F55E016409E5 /* MonkinThought.swift */,
 				3553E2E4B7888DE53F62A953 /* PetView.swift */,
 				05E0F1586DF3634EE09F2F5A /* PetWindowController.swift */,
 				395F67661E4495E9A4ECF1BB /* ScreenTextReader.swift */,
 				2230341D1D8EC02CA480AA23 /* ScreenWorldReader.swift */,
+				A9F53A7E4DD4E22DADE79F09 /* SportsPropView.swift */,
 				23C55B1498B0686040D82842 /* ThoughtBubbleView.swift */,
+				6BB750B782C204E48E84A203 /* WaterPoolWindow.swift */,
 				8DC2793AC6C0F5313A787E50 /* Resources */,
 			);
 			path = Monkin;
@@ -177,12 +186,15 @@
 				E66EB09F3244E7DCF0874E76 /* MonkinMotion.swift in Sources */,
 				B32D628204B236FB0E7ADA29 /* MonkinPose.swift in Sources */,
 				1C40EF371DE2E7F8CFD17BA6 /* MonkinSVGRenderer.swift in Sources */,
+				609ACBBDC24D31789082D596 /* MonkinTelemetry.swift in Sources */,
 				B0086B42D28ACA7E9CB786C7 /* MonkinThought.swift in Sources */,
 				E78DCA17291B52030902A2EE /* PetView.swift in Sources */,
 				5EE2430A00A1255BA25DC397 /* PetWindowController.swift in Sources */,
 				3CE1A75716BE71D665DD3990 /* ScreenTextReader.swift in Sources */,
 				DE469FCE45AA46044FF3FCE5 /* ScreenWorldReader.swift in Sources */,
+				D290C70A69F294D32629DAAE /* SportsPropView.swift in Sources */,
 				07E7175B3741C759F1A7E36E /* ThoughtBubbleView.swift in Sources */,
+				864FA3CAF4EE8C3D9CC079D1 /* WaterPoolWindow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

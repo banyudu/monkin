@@ -2,16 +2,19 @@ import AppKit
 
 final class PetWindowController: NSWindowController {
     let petView: PetView
+    private let sportsPropView: SportsPropView
     private let thoughtBubble: ThoughtBubbleView
     private let thoughtProvider: MonkinThoughtProvider = CodexThoughtProvider()
     private let screenTextReader = ScreenTextReader()
     private let screenWorldReader = ScreenWorldReader()
+    private let waterPoolWindow = WaterPoolWindowController()
     private var thoughtTimer: Timer?
     private var roamTimer: Timer?
     private var actionTimer: Timer?
     private var ocrTimer: Timer?
     private var eatingTimer: Timer?
     private var worldTimer: Timer?
+    private var storyTimer: Timer?
     private var roamDirection: CGFloat = 1
     private var roamTime: CGFloat = 0
     private var jumpTime: CGFloat = 0
@@ -27,9 +30,11 @@ final class PetWindowController: NSWindowController {
 
     init() {
         petView = PetView(frame: NSRect(x: 294, y: 10, width: 128, height: 128))
+        sportsPropView = SportsPropView(frame: NSRect(x: 0, y: 0, width: 440, height: 230))
         thoughtBubble = ThoughtBubbleView(frame: NSRect(x: 0, y: 116, width: 300, height: 110))
         let rootView = NSView(frame: NSRect(x: 0, y: 0, width: 440, height: 230))
         rootView.addSubview(thoughtBubble)
+        rootView.addSubview(sportsPropView)
         rootView.addSubview(petView)
 
         let window = PetWindow(contentRect: rootView.frame,
@@ -49,6 +54,9 @@ final class PetWindowController: NSWindowController {
 
         petView.onTap = { [weak self] in self?.speak() }
         thoughtBubble.onTap = { [weak self] in self?.speak() }
+        petView.onMotionStyleChange = { [weak self] style in
+            self?.sportsPropView.setStyle(style)
+        }
 
         DispatchQueue.main.async { [weak self] in
             self?.speak()
@@ -200,12 +208,65 @@ final class PetWindowController: NSWindowController {
 
     private func performNextMotion() {
         guard jumpTime <= 0 else { return }
-        let styles = MonkinMotion.expressive
-        motionIndex = (motionIndex + 1) % styles.count
-        petView.setMotionStyle(styles[motionIndex])
+        let style = MonkinMotion.randomExpressive()
+        MonkinTelemetry.shared.record("motion.selected", attributes: [
+            "style": style,
+            "is_sport": String(MonkinMotion.sports.contains(style))
+        ])
+        if style == "escape" || style == "dive" {
+            performStoryMotion(style)
+            return
+        }
+        petView.setMotionStyle(style)
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [weak self] in
             guard let self, self.jumpTime <= 0 else { return }
             self.petView.setMotionStyle("wriggle")
+        }
+    }
+
+    private func performStoryMotion(_ style: String) {
+        guard let window, let screen = window.screen ?? NSScreen.main else { return }
+        storyTimer?.invalidate()
+        roamTimer?.invalidate()
+        eatingTarget = nil
+        petView.setMotionStyle(style)
+
+        let origin = window.frame.origin
+        let visible = screen.visibleFrame
+        let direction: CGFloat = Bool.random() ? -1 : 1
+        let destination: NSPoint
+        if style == "escape" {
+            destination = NSPoint(x: direction < 0 ? visible.minX - window.frame.width - 30 : visible.maxX + 30,
+                                  y: origin.y)
+        } else {
+            waterPoolWindow.show(on: screen, centeredAt: origin.x + window.frame.width / 2)
+            destination = NSPoint(x: origin.x, y: visible.minY + 42)
+        }
+
+        var elapsed: CGFloat = 0
+        let duration: CGFloat = style == "escape" ? 1.35 : 1.15
+        storyTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 30.0, repeats: true) { [weak self] timer in
+            guard let self, let window = self.window else { timer.invalidate(); return }
+            elapsed += 1.0 / 30.0
+            let phase = min(1, elapsed / duration)
+            let landingPhase = style == "dive" ? min(1, phase / 0.68) : phase
+            let eased = landingPhase * landingPhase * (3 - 2 * landingPhase)
+            let sinkPhase = style == "dive" ? max(0, (phase - 0.68) / 0.32) : 0
+            let current = NSPoint(x: origin.x + (destination.x - origin.x) * eased,
+                                  y: origin.y + (destination.y - origin.y) * eased - sinkPhase * (window.frame.height + 45))
+            window.setFrameOrigin(current)
+            if phase >= 1 {
+                timer.invalidate()
+                self.storyTimer = nil
+                self.thoughtBubble.show(text: style == "escape" ? "bye!" : "splash!", for: 1.8)
+                if style == "dive" { self.waterPoolWindow.hide() }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { [weak self] in
+                    guard let self, let window = self.window else { return }
+                    window.setFrameOrigin(origin)
+                    self.petView.setMotionStyle("celebrate")
+                    self.startRoaming()
+                }
+            }
         }
     }
 
@@ -268,6 +329,8 @@ final class PetWindowController: NSWindowController {
         ocrTimer?.invalidate()
         eatingTimer?.invalidate()
         worldTimer?.invalidate()
+        storyTimer?.invalidate()
+        waterPoolWindow.hide()
     }
 
     @available(*, unavailable)

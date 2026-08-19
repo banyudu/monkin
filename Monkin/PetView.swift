@@ -2,6 +2,7 @@ import AppKit
 
 final class PetView: NSView {
     var onTap: (() -> Void)?
+    var onMotionStyleChange: ((String) -> Void)?
     private let furColor = NSColor(calibratedRed: 0.58, green: 0.30, blue: 0.13, alpha: 1)
     private let bellyColor = NSColor(calibratedRed: 0.94, green: 0.72, blue: 0.43, alpha: 1)
     private let accentColor = NSColor(calibratedRed: 0.45, green: 0.34, blue: 0.82, alpha: 1)
@@ -79,6 +80,7 @@ final class PetView: NSView {
 
     func setMotionStyle(_ style: String) {
         motionStyle = style
+        onMotionStyleChange?(style)
     }
 
     private func advanceMotion() {
@@ -129,6 +131,30 @@ final class PetView: NSView {
         }
         if motionStyle == "wriggle" {
             advanceWriggle()
+            return
+        }
+        if motionStyle == "escape" {
+            advanceEscape()
+            return
+        }
+        if motionStyle == "dive" {
+            advanceDive()
+            return
+        }
+        if motionStyle == "swim" {
+            advanceSwim()
+            return
+        }
+        if motionStyle == "soccer" {
+            advanceSoccer()
+            return
+        }
+        if motionStyle == "tennis" {
+            advanceTennis()
+            return
+        }
+        if motionStyle == "skate" {
+            advanceSkate()
             return
         }
 
@@ -358,6 +384,115 @@ final class PetView: NSView {
             leftLegRotation: 18 + lift * 22,
             rightLegRotation: -18 - lift * 22,
             tailRotation: sin(phase * 1.5) * 18
+        ))
+    }
+
+    private func advanceEscape() {
+        let run = sin(motionPhase * 5.0)
+        let panic = abs(sin(motionPhase * 2.5))
+        setPose(MonkinPose(
+            bodyBob: panic * 4,
+            bodyScaleX: 1.04,
+            bodyScaleY: 0.88,
+            headRotation: -run * 8,
+            headOffsetY: -panic * 4,
+            leftArmRotation: 42 + run * 12,
+            rightArmRotation: -42 + run * 12,
+            leftArmOffsetY: -panic * 5,
+            rightArmOffsetY: -panic * 5,
+            leftLegRotation: -run * 18,
+            rightLegRotation: run * 18,
+            tailRotation: -run * 28
+        ))
+    }
+
+    private func advanceDive() {
+        let dive = (sin(motionPhase * 2.0) + 1) / 2
+        setPose(MonkinPose(
+            bodyBob: dive * 6,
+            bodyScaleX: 1.16,
+            bodyScaleY: 0.72,
+            headRotation: 18 + dive * 12,
+            headOffsetY: -dive * 10,
+            headScaleX: 0.92,
+            headScaleY: 0.92,
+            leftArmRotation: -58 - dive * 18,
+            rightArmRotation: 58 + dive * 18,
+            leftArmOffsetY: dive * 8,
+            rightArmOffsetY: dive * 8,
+            leftLegRotation: 28 + dive * 18,
+            rightLegRotation: -28 - dive * 18,
+            tailRotation: -30 + dive * 45
+        ))
+    }
+
+    private func advanceSwim() {
+        let stroke = sin(motionPhase * 3.2)
+        let kick = sin(motionPhase * 6.4)
+        setPose(MonkinPose(
+            bodyBob: abs(stroke) * 3,
+            bodyScaleX: 1.08,
+            bodyScaleY: 0.82,
+            headRotation: stroke * 5,
+            headOffsetY: 3 + abs(stroke) * 3,
+            leftArmRotation: -55 + stroke * 38,
+            rightArmRotation: 55 + stroke * 38,
+            leftArmOffsetY: -stroke * 5,
+            rightArmOffsetY: stroke * 5,
+            leftLegRotation: kick * 22,
+            rightLegRotation: -kick * 22,
+            tailRotation: stroke * 24
+        ))
+    }
+
+    private func advanceSoccer() {
+        let kick = max(0, sin(motionPhase * 2.2))
+        let balance = sin(motionPhase * 2.2)
+        setPose(MonkinPose(
+            bodyBob: kick * 5,
+            headRotation: -balance * 4,
+            headOffsetY: kick * 4,
+            leftArmRotation: -25 - balance * 16,
+            rightArmRotation: 25 - balance * 16,
+            leftArmOffsetY: kick * 5,
+            rightArmOffsetY: kick * 5,
+            leftLegRotation: -balance * 12,
+            rightLegRotation: 12 + kick * 58,
+            tailRotation: -balance * 22
+        ))
+    }
+
+    private func advanceTennis() {
+        let swing = sin(motionPhase * 2.8)
+        let followThrough = max(0, swing)
+        setPose(MonkinPose(
+            bodyBob: abs(swing) * 3,
+            bodyScaleX: 0.98,
+            bodyScaleY: 1.03,
+            headRotation: swing * 7,
+            leftArmRotation: -18 + swing * 20,
+            rightArmRotation: -20 - followThrough * 78,
+            rightArmOffsetY: followThrough * 10,
+            leftLegRotation: -swing * 14,
+            rightLegRotation: swing * 14,
+            tailRotation: swing * 28
+        ))
+    }
+
+    private func advanceSkate() {
+        let glide = sin(motionPhase * 2.0)
+        let crouch = (sin(motionPhase * 2.0) + 1) / 2
+        setPose(MonkinPose(
+            bodyBob: crouch * 2,
+            bodyScaleX: 1.08,
+            bodyScaleY: 0.86,
+            headRotation: glide * 9,
+            headOffsetY: -crouch * 5,
+            leftArmRotation: -35 + glide * 22,
+            rightArmRotation: 35 + glide * 22,
+            leftLegRotation: -18 - glide * 18,
+            rightLegRotation: 18 - glide * 18,
+            tailRotation: glide * 34
         ))
     }
 
