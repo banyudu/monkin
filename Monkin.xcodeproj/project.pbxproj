@@ -7,18 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C40EF371DE2E7F8CFD17BA6 /* MonkinSVGRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 374FBC3AE5F8FDE54C48AE0C /* MonkinSVGRenderer.swift */; };
+		3A0AAF31F043FE5EBED3C1D6 /* MonkinFigureSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238AF9B0C44C5C6B2B6E2E8F /* MonkinFigureSpec.swift */; };
 		580F3518DAFB2DF82C71F30E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5665016EDEA8646928D618A7 /* AppDelegate.swift */; };
 		5EE2430A00A1255BA25DC397 /* PetWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E0F1586DF3634EE09F2F5A /* PetWindowController.swift */; };
+		74118FD2CECB27FEA8A1B824 /* monkin-night-owl.svg in Resources */ = {isa = PBXBuildFile; fileRef = 80F4549E3AB4610B0300B685 /* monkin-night-owl.svg */; };
+		B4F5D5372C607E5B70112553 /* monkin-coffeehouse.svg in Resources */ = {isa = PBXBuildFile; fileRef = BF6AECE4060D86371CB314E9 /* monkin-coffeehouse.svg */; };
 		D502A9BE31595552099B99C3 /* monkin-retro.svg in Resources */ = {isa = PBXBuildFile; fileRef = CD95B63B7358EF9078B96935 /* monkin-retro.svg */; };
+		E2412D920C8C9E5BC647F277 /* monkin-starry.svg in Resources */ = {isa = PBXBuildFile; fileRef = 59BA87D48AADD7F0BF321536 /* monkin-starry.svg */; };
 		E78DCA17291B52030902A2EE /* PetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3553E2E4B7888DE53F62A953 /* PetView.swift */; };
+		F5AD178202705C44748AAEC8 /* monkin-zen-desk.svg in Resources */ = {isa = PBXBuildFile; fileRef = 1BAA124D665540F62015C322 /* monkin-zen-desk.svg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		05E0F1586DF3634EE09F2F5A /* PetWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetWindowController.swift; sourceTree = "<group>"; };
+		1BAA124D665540F62015C322 /* monkin-zen-desk.svg */ = {isa = PBXFileReference; path = "monkin-zen-desk.svg"; sourceTree = "<group>"; };
+		238AF9B0C44C5C6B2B6E2E8F /* MonkinFigureSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkinFigureSpec.swift; sourceTree = "<group>"; };
 		3553E2E4B7888DE53F62A953 /* PetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetView.swift; sourceTree = "<group>"; };
+		374FBC3AE5F8FDE54C48AE0C /* MonkinSVGRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkinSVGRenderer.swift; sourceTree = "<group>"; };
 		5665016EDEA8646928D618A7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		59BA87D48AADD7F0BF321536 /* monkin-starry.svg */ = {isa = PBXFileReference; path = "monkin-starry.svg"; sourceTree = "<group>"; };
+		80F4549E3AB4610B0300B685 /* monkin-night-owl.svg */ = {isa = PBXFileReference; path = "monkin-night-owl.svg"; sourceTree = "<group>"; };
 		81F1CBAFAAA8AA205E475E19 /* Monkin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Monkin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B35915515ED8A57FBE6807EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		BF6AECE4060D86371CB314E9 /* monkin-coffeehouse.svg */ = {isa = PBXFileReference; path = "monkin-coffeehouse.svg"; sourceTree = "<group>"; };
 		BF7DB7304AD48EB98CF8A525 /* Monkin.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Monkin.entitlements; sourceTree = "<group>"; };
 		CD95B63B7358EF9078B96935 /* monkin-retro.svg */ = {isa = PBXFileReference; path = "monkin-retro.svg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -30,6 +42,8 @@
 				5665016EDEA8646928D618A7 /* AppDelegate.swift */,
 				B35915515ED8A57FBE6807EE /* Info.plist */,
 				BF7DB7304AD48EB98CF8A525 /* Monkin.entitlements */,
+				238AF9B0C44C5C6B2B6E2E8F /* MonkinFigureSpec.swift */,
+				374FBC3AE5F8FDE54C48AE0C /* MonkinSVGRenderer.swift */,
 				3553E2E4B7888DE53F62A953 /* PetView.swift */,
 				05E0F1586DF3634EE09F2F5A /* PetWindowController.swift */,
 				8DC2793AC6C0F5313A787E50 /* Resources */,
@@ -40,7 +54,11 @@
 		8DC2793AC6C0F5313A787E50 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				BF6AECE4060D86371CB314E9 /* monkin-coffeehouse.svg */,
+				80F4549E3AB4610B0300B685 /* monkin-night-owl.svg */,
 				CD95B63B7358EF9078B96935 /* monkin-retro.svg */,
+				59BA87D48AADD7F0BF321536 /* monkin-starry.svg */,
+				1BAA124D665540F62015C322 /* monkin-zen-desk.svg */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -121,7 +139,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B4F5D5372C607E5B70112553 /* monkin-coffeehouse.svg in Resources */,
+				74118FD2CECB27FEA8A1B824 /* monkin-night-owl.svg in Resources */,
 				D502A9BE31595552099B99C3 /* monkin-retro.svg in Resources */,
+				E2412D920C8C9E5BC647F277 /* monkin-starry.svg in Resources */,
+				F5AD178202705C44748AAEC8 /* monkin-zen-desk.svg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,6 +155,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				580F3518DAFB2DF82C71F30E /* AppDelegate.swift in Sources */,
+				3A0AAF31F043FE5EBED3C1D6 /* MonkinFigureSpec.swift in Sources */,
+				1C40EF371DE2E7F8CFD17BA6 /* MonkinSVGRenderer.swift in Sources */,
 				E78DCA17291B52030902A2EE /* PetView.swift in Sources */,
 				5EE2430A00A1255BA25DC397 /* PetWindowController.swift in Sources */,
 			);

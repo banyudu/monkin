@@ -4,16 +4,16 @@ final class PetView: NSView {
     private let furColor = NSColor(calibratedRed: 0.58, green: 0.30, blue: 0.13, alpha: 1)
     private let bellyColor = NSColor(calibratedRed: 0.94, green: 0.72, blue: 0.43, alpha: 1)
     private let accentColor = NSColor(calibratedRed: 0.45, green: 0.34, blue: 0.82, alpha: 1)
-    private lazy var svgMascot: NSImage? = {
-        guard let url = Bundle.main.url(forResource: "monkin-retro", withExtension: "svg") else { return nil }
-        return NSImage(contentsOf: url)
-    }()
+    private let renderer = MonkinSVGRenderer()
+    private var figureSpec = MonkinFigureSpec.default
+    private var renderedImage: NSImage?
     private var blinkTimer: Timer?
     private var isBlinking = false
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         wantsLayer = true
+        renderedImage = renderer.image(for: figureSpec)
         blinkTimer = Timer.scheduledTimer(withTimeInterval: 3.8, repeats: true) { [weak self] _ in
             self?.blink()
         }
@@ -31,8 +31,8 @@ final class PetView: NSView {
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
 
-        if let svgMascot {
-            svgMascot.draw(in: bounds, from: .zero, operation: .sourceOver, fraction: 1)
+        if let renderedImage {
+            renderedImage.draw(in: bounds, from: .zero, operation: .sourceOver, fraction: 1)
             return
         }
 
@@ -48,6 +48,14 @@ final class PetView: NSView {
         drawFace()
 
         context?.restoreGState()
+    }
+
+    /// Rebuilds the SVG immediately from a dynamic material specification.
+    /// A future conversation/LLM layer can call this with decoded JSON.
+    func setFigure(_ spec: MonkinFigureSpec) {
+        figureSpec = spec
+        renderedImage = renderer.image(for: spec)
+        needsDisplay = true
     }
 
     private func drawBody() {
@@ -270,10 +278,15 @@ final class PetView: NSView {
 
     private func blink() {
         isBlinking = true
+        var blinkSpec = figureSpec
+        blinkSpec.eyes = "blink"
+        renderedImage = renderer.image(for: blinkSpec)
         needsDisplay = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.16) { [weak self] in
             self?.isBlinking = false
-            self?.needsDisplay = true
+            guard let self else { return }
+            self.renderedImage = self.renderer.image(for: self.figureSpec)
+            self.needsDisplay = true
         }
     }
 }

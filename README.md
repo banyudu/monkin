@@ -19,6 +19,27 @@ Run the `Monkin` scheme from Xcode. The generated placeholder monkey can be drag
 
 The drawing is intentionally self-contained in `PetView.swift`, making it easy to replace with sprite sheets, an animated image, or a richer SwiftUI/AppKit character later.
 
+## Dynamic figures
+
+Monkin can rebuild its SVG appearance at runtime from a data-driven
+`MonkinFigureSpec`. The spec uses material names rather than a fixed emotion
+enum, so a conversation layer can compose new combinations:
+
+```swift
+petWindow.setFigure(MonkinFigureSpec(
+    eyes: "curious",
+    brows: "raised",
+    mouth: "open",
+    cheeks: "light",
+    accessories: ["question-mark"],
+    colors: ["accent": "#4A7772"]
+))
+```
+
+`MonkinSVGRenderer` turns that specification into SVG and an `NSImage` in
+memory. A future LLM bridge only needs to decode validated JSON into
+`MonkinFigureSpec`; it does not need to generate the complete character SVG.
+
 ## Build and deploy
 
 ```sh

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="250" viewBox="0 0 300 250">
+  <defs>
+    <linearGradient id="fur" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#B97848"/>
+      <stop offset="0.58" stop-color="#86502F"/>
+      <stop offset="1" stop-color="#593522"/>
+    </linearGradient>
+    <linearGradient id="muzzle" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F1D09A"/>
+      <stop offset="1" stop-color="#C8955C"/>
+    </linearGradient>
+    <linearGradient id="ear" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#C78650"/>
+      <stop offset="1" stop-color="#704229"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#17171B" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+
+  <ellipse cx="150" cy="222" rx="86" ry="12" fill="#17171B" opacity="0.16"/>
+  <g filter="url(#shadow)">
+    <path d="M87 77 C82 48 103 35 126 49 C140 34 160 34 175 49 C199 35 220 49 214 78 C235 96 237 141 215 169 C197 194 172 204 150 204 C128 204 103 194 85 169 C63 141 65 96 87 77Z" fill="url(#fur)" stroke="#2B2522" stroke-width="7" stroke-linejoin="round"/>
+    <ellipse cx="74" cy="112" rx="29" ry="35" fill="url(#ear)" stroke="#2B2522" stroke-width="7"/>
+    <ellipse cx="226" cy="112" rx="29" ry="35" fill="url(#ear)" stroke="#2B2522" stroke-width="7"/>
+
+    <!-- muted teal ear tags -->
+    <path d="M62 111 L74 98 L86 111 L74 124Z" fill="#4A7772" stroke="#2B2522" stroke-width="4"/>
+    <path d="M214 111 L226 98 L238 111 L226 124Z" fill="#4A7772" stroke="#2B2522" stroke-width="4"/>
+
+    <!-- loose, intelligent forehead tuft -->
+    <path d="M119 57 Q135 35 149 52 Q163 31 181 58 Q165 67 150 62 Q136 68 119 57Z" fill="#C88750" stroke="#2B2522" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M133 54 Q150 45 167 54" fill="none" stroke="#E0A875" stroke-width="3" stroke-linecap="round"/>
+
+    <ellipse cx="150" cy="141" rx="69" ry="48" fill="url(#muzzle)" stroke="#2B2522" stroke-width="5"/>
+
+    <!-- knowing, friendly eyes -->
+    <path d="M101 108 Q116 99 131 108" fill="none" stroke="#2B2522" stroke-width="6" stroke-linecap="round"/>
+    <path d="M169 108 Q184 99 199 108" fill="none" stroke="#2B2522" stroke-width="6" stroke-linecap="round"/>
+    <ellipse cx="117" cy="121" rx="10" ry="15" fill="#25262A"/>
+    <ellipse cx="183" cy="121" rx="10" ry="15" fill="#25262A"/>
+    <circle cx="121" cy="116" r="3.5" fill="#FFF9E9"/>
+    <circle cx="187" cy="116" r="3.5" fill="#FFF9E9"/>
+
+    <path d="M88 143 Q101 136 113 143" fill="none" stroke="#B96D4A" stroke-width="5" stroke-linecap="round" opacity="0.6"/>
+    <path d="M187 143 Q199 136 212 143" fill="none" stroke="#B96D4A" stroke-width="5" stroke-linecap="round" opacity="0.6"/>
+
+    <path d="M143 132 Q150 127 157 132 L154 139 Q150 142 146 139Z" fill="#563123"/>
+    <!-- a small, knowing half-smile -->
+    <path d="M132 153 Q148 162 165 152" fill="none" stroke="#563123" stroke-width="6" stroke-linecap="round"/>
+    <path d="M151 156 Q158 158 164 154" fill="none" stroke="#B96D4A" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- coffee-bean badge -->
+    <ellipse cx="210" cy="82" rx="15" ry="19" fill="#4A7772" stroke="#2B2522" stroke-width="4" transform="rotate(24 210 82)"/>
+    <path d="M207 68 Q215 81 207 96" fill="none" stroke="#CFE0D5" stroke-width="3" stroke-linecap="round" transform="rotate(24 210 82)"/>
+  </g>
+</svg>
