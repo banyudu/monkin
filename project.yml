@@ -1,0 +1,31 @@
+name: Monkin
+options:
+  bundleIdPrefix: com.monkin
+  deploymentTarget:
+    macOS: "13.0"
+  createIntermediateGroups: true
+  developmentLanguage: en
+settings:
+  base:
+    SWIFT_VERSION: 5.0
+    MACOSX_DEPLOYMENT_TARGET: 13.0
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
+targets:
+  Monkin:
+    type: application
+    platform: macOS
+    sources:
+      - path: Monkin
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.banyudu.monkin
+        PRODUCT_NAME: Monkin
+        INFOPLIST_FILE: Monkin/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Monkin/Monkin.entitlements
+        DEVELOPMENT_TEAM: RYLS8UDY5D
+        CODE_SIGN_IDENTITY: Developer ID Application
+        LD_RUNPATH_SEARCH_PATHS: $(inherited) @executable_path/../Frameworks
+    scheme:
+      gatherCoverageData: false
+      commandLineArguments: {}
