@@ -7,7 +7,7 @@ struct MonkinThought {
 }
 
 protocol MonkinThoughtProvider {
-    func nextThought() -> MonkinThought?
+    func nextThought(completion: @escaping (MonkinThought?) -> Void)
 }
 
 final class LocalThoughtProvider: MonkinThoughtProvider {
@@ -41,13 +41,124 @@ final class LocalThoughtProvider: MonkinThoughtProvider {
 
     private var lastIndex: Int?
 
-    func nextThought() -> MonkinThought? {
-        guard !thoughts.isEmpty else { return nil }
+    func nextThought(completion: @escaping (MonkinThought?) -> Void) {
+        guard !thoughts.isEmpty else { completion(nil); return }
         var index = Int.random(in: thoughts.indices)
         if thoughts.count > 1 {
             while index == lastIndex { index = Int.random(in: thoughts.indices) }
         }
         lastIndex = index
-        return thoughts[index]
+        completion(thoughts[index])
+    }
+}
+
+/// Uses the user's authenticated Codex CLI, keeping API keys out of Monkin.
+final class CodexThoughtProvider: MonkinThoughtProvider {
+    private struct Payload: Decodable {
+        let text: String
+        let eyes: String?
+        let brows: String?
+        let mouth: String?
+        let cheeks: String?
+        let accessories: [String]?
+        let accent: String?
+        let visibleDuration: Double?
+    }
+
+    private let fallback: MonkinThoughtProvider
+    private var requestInFlight = false
+    private let lock = NSLock()
+
+    init(fallback: MonkinThoughtProvider = LocalThoughtProvider()) {
+        self.fallback = fallback
+    }
+
+    func nextThought(completion: @escaping (MonkinThought?) -> Void) {
+        lock.lock()
+        if requestInFlight {
+            lock.unlock()
+            fallback.nextThought(completion: completion)
+            return
+        }
+        requestInFlight = true
+        lock.unlock()
+
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            guard let self else { return }
+            let thought = self.runCodex()
+            self.lock.lock()
+            self.requestInFlight = false
+            self.lock.unlock()
+            DispatchQueue.main.async {
+                if let thought {
+                    completion(thought)
+                } else {
+                    self.fallback.nextThought(completion: completion)
+                }
+            }
+        }
+    }
+
+    private func runCodex() -> MonkinThought? {
+        let outputURL = URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent("monkin-thought-\(UUID().uuidString).txt")
+        defer { try? FileManager.default.removeItem(at: outputURL) }
+
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/opt/homebrew/bin/codex")
+        process.currentDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
+        process.arguments = ["exec", "--ephemeral", "--skip-git-repo-check", "--color", "never",
+                             "-m", "gpt-5.6-luna", "-o", outputURL.path, "-"]
+        var environment = ProcessInfo.processInfo.environment
+        environment["PATH"] = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+        process.environment = environment
+
+        let input = Pipe()
+        process.standardInput = input
+        process.standardOutput = FileHandle.nullDevice
+        process.standardError = FileHandle.nullDevice
+        do {
+            try process.run()
+            let prompt = """
+            你是 Monkin，一个住在用户桌面上的成年人的可爱猴子宠物。请用自然、机灵、略带荒诞的中文和主人说一句话，像真的有自己的观察和小脾气。不要说教，不要解释你是 AI，不要使用 markdown。可以逗主人、提出古怪问题、描述你刚才想做的事情，也可以暗示身体动作（比如蛄蛹、突然起跳、躲到屏幕后面）。
+
+            只返回一个合法 JSON 对象，不要代码块：
+            {"text":"不超过45字的台词","eyes":"neutral|happy|sad|curious|sleepy","brows":"relaxed|raised|worried","mouth":"neutral|smile|open|sad|smirk","cheeks":"light 或 null","accessories":["coffee|spark|question-mark|moon"],"accent":"#RRGGBB","visibleDuration":7}
+            """
+            input.fileHandleForWriting.write(prompt.data(using: .utf8)!)
+            try input.fileHandleForWriting.close()
+            process.waitUntilExit()
+        } catch {
+            return nil
+        }
+
+        guard process.terminationStatus == 0,
+              let data = try? Data(contentsOf: outputURL),
+              let payload = decodePayload(from: data) else { return nil }
+        return makeThought(from: payload)
+    }
+
+    private func decodePayload(from data: Data) -> Payload? {
+        guard let raw = String(data: data, encoding: .utf8) else { return nil }
+        let cleaned = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let start = cleaned.firstIndex(of: "{"), let end = cleaned.lastIndex(of: "}") else { return nil }
+        let json = String(cleaned[start...end]).data(using: .utf8)!
+        return try? JSONDecoder().decode(Payload.self, from: json)
+    }
+
+    private func makeThought(from payload: Payload) -> MonkinThought? {
+        let text = payload.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !text.isEmpty else { return nil }
+        let eyes = ["neutral", "happy", "sad", "curious", "sleepy"].contains(payload.eyes ?? "") ? payload.eyes! : "neutral"
+        let brows = ["relaxed", "raised", "worried"].contains(payload.brows ?? "") ? payload.brows! : "relaxed"
+        let mouth = ["neutral", "smile", "open", "sad", "smirk"].contains(payload.mouth ?? "") ? payload.mouth! : "smile"
+        let accessories = (payload.accessories ?? []).filter { ["coffee", "spark", "question-mark", "moon"].contains($0) }.prefix(2)
+        let accent = payload.accent?.hasPrefix("#") == true ? payload.accent! : "#4A7772"
+        let duration = min(max(payload.visibleDuration ?? 7, 4), 12)
+        return MonkinThought(text: text,
+                             figure: MonkinFigureSpec(eyes: eyes, brows: brows, mouth: mouth,
+                                                      cheeks: payload.cheeks == "light" ? "light" : nil,
+                                                      accessories: Array(accessories), colors: ["accent": accent]),
+                             visibleDuration: duration)
     }
 }

@@ -3,7 +3,7 @@ import AppKit
 final class PetWindowController: NSWindowController {
     let petView: PetView
     private let thoughtBubble: ThoughtBubbleView
-    private let thoughtProvider: MonkinThoughtProvider = LocalThoughtProvider()
+    private let thoughtProvider: MonkinThoughtProvider = CodexThoughtProvider()
     private var thoughtTimer: Timer?
     private var roamTimer: Timer?
     private var roamDirection: CGFloat = 1
@@ -47,17 +47,20 @@ final class PetWindowController: NSWindowController {
     }
 
     private func speak() {
-        guard let thought = thoughtProvider.nextThought() else { return }
-        petView.setFigure(thought.figure)
-        thoughtBubble.show(text: thought.text, for: thought.visibleDuration)
+        thoughtProvider.nextThought { [weak self] thought in
+            guard let self, let thought else { return }
+            self.petView.setFigure(thought.figure)
+            self.thoughtBubble.show(text: thought.text, for: thought.visibleDuration)
+        }
     }
 
     private func scheduleNextThought() {
         thoughtTimer?.invalidate()
         let interval = TimeInterval.random(in: 45...90)
         thoughtTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: false) { [weak self] _ in
-            self?.speak()
-            self?.scheduleNextThought()
+            guard let self else { return }
+            self.speak()
+            self.scheduleNextThought()
         }
     }
 
