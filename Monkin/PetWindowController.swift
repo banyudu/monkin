@@ -10,13 +10,16 @@ final class PetWindowController: NSWindowController {
     private var roamDirection: CGFloat = 1
     private var roamTime: CGFloat = 0
     private var jumpTime: CGFloat = 0
+    private var jumpDuration: CGFloat = 1.05
+    private var jumpHeight: CGFloat = 70
+    private var nextRoamEvent: CGFloat = 6
     private var motionIndex = 0
     private var roamTarget = NSPoint.zero
     private var hasRoamTarget = false
 
     init() {
         petView = PetView(frame: NSRect(x: 270, y: 10, width: 152, height: 152))
-        thoughtBubble = ThoughtBubbleView(frame: NSRect(x: 0, y: 126, width: 270, height: 90))
+        thoughtBubble = ThoughtBubbleView(frame: NSRect(x: 0, y: 116, width: 300, height: 110))
         let rootView = NSView(frame: NSRect(x: 0, y: 0, width: 440, height: 230))
         rootView.addSubview(thoughtBubble)
         rootView.addSubview(petView)
@@ -84,6 +87,7 @@ final class PetWindowController: NSWindowController {
         petView.setMotionStyle("wriggle")
         roamTime = 0
         jumpTime = 0
+        nextRoamEvent = CGFloat.random(in: 4...9)
         hasRoamTarget = false
         roamTimer?.invalidate()
         roamTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 30.0, repeats: true) { [weak self] _ in
@@ -137,12 +141,20 @@ final class PetWindowController: NSWindowController {
         if jumpTime > 0 {
             jumpTime -= 1.0 / 30.0
             petView.setMotionStyle("jump")
-        } else if roamTime > 4.5 {
+        } else if roamTime > nextRoamEvent {
             roamTime = 0
-            jumpTime = 1.05
+            nextRoamEvent = CGFloat.random(in: 4...10)
             roamTarget = NSPoint(x: CGFloat.random(in: minX...maxX),
                                  y: CGFloat.random(in: minY...maxY))
-            petView.setMotionStyle("jump")
+            hasRoamTarget = true
+            if Bool.random() {
+                jumpDuration = CGFloat.random(in: 0.8...1.25)
+                jumpTime = jumpDuration
+                jumpHeight = CGFloat.random(in: 45...90)
+                petView.setMotionStyle("jump")
+            } else {
+                petView.setMotionStyle("wriggle")
+            }
         }
 
         let speed: CGFloat = jumpTime > 0 ? 5.5 : 1.25
@@ -151,8 +163,8 @@ final class PetWindowController: NSWindowController {
         let distance = max(1, hypot(dx, dy))
         let nextX = frame.origin.x + dx / distance * min(speed, abs(dx) + abs(dy) > 0 ? speed : 0)
         let nextY = frame.origin.y + dy / distance * min(speed, abs(dx) + abs(dy) > 0 ? speed : 0)
-        let jumpProgress = jumpTime > 0 ? (1.05 - jumpTime) / 1.05 : 0
-        let jumpArc = sin(jumpProgress * .pi) * 92
+        let jumpProgress = jumpTime > 0 ? (jumpDuration - jumpTime) / jumpDuration : 0
+        let jumpArc = sin(jumpProgress * .pi) * jumpHeight
         let clampedX = min(max(nextX, minX), maxX)
         let clampedY = min(max(nextY + jumpArc, minY), maxY)
         window.setFrameOrigin(NSPoint(x: clampedX, y: clampedY))
@@ -176,8 +188,12 @@ final class PetWindowController: NSWindowController {
     private static func initialOrigin(for size: NSSize) -> NSPoint {
         guard let screen = NSScreen.main else { return .zero }
         let visibleFrame = screen.visibleFrame
-        return NSPoint(x: visibleFrame.maxX - size.width - 32,
-                       y: visibleFrame.minY + 24)
+        let minX = visibleFrame.minX + 12
+        let maxX = visibleFrame.maxX - size.width - 12
+        let minY = visibleFrame.minY + 18
+        let maxY = max(minY, visibleFrame.maxY - size.height - 18)
+        return NSPoint(x: CGFloat.random(in: minX...maxX),
+                       y: CGFloat.random(in: minY...maxY))
     }
 }
 
