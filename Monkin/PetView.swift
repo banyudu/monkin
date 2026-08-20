@@ -1,4 +1,7 @@
 import AppKit
+#if canImport(RiveRuntime)
+import RiveRuntime
+#endif
 
 final class PetView: NSView {
     var onTap: (() -> Void)?
@@ -15,11 +18,20 @@ final class PetView: NSView {
     private var blinkTimer: Timer?
     private var motionTimer: Timer?
     private var isBlinking = false
+#if canImport(RiveRuntime)
+    private var riveRenderer: RivePetRenderer?
+#endif
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         wantsLayer = true
         renderedImage = renderer.image(for: figureSpec)
+#if canImport(RiveRuntime)
+        if let riveRenderer = RivePetRenderer.make(frame: bounds) {
+            self.riveRenderer = riveRenderer
+            addSubview(riveRenderer)
+        }
+#endif
         blinkTimer = Timer.scheduledTimer(withTimeInterval: 3.8, repeats: true) { [weak self] _ in
             self?.blink()
         }
@@ -40,6 +52,12 @@ final class PetView: NSView {
 
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
+
+#if canImport(RiveRuntime)
+        // The subview is the desktop-app Rive path. Keep the procedural
+        // renderer below as a migration and asset-load fallback.
+        if riveRenderer?.isHidden == false { return }
+#endif
 
         if let renderedImage {
             renderedImage.draw(in: bounds, from: .zero, operation: .sourceOver, fraction: 1)
@@ -64,11 +82,21 @@ final class PetView: NSView {
         onTap?()
     }
 
+    override func layout() {
+        super.layout()
+#if canImport(RiveRuntime)
+        riveRenderer?.frame = bounds
+#endif
+    }
+
     /// Rebuilds the SVG immediately from a dynamic material specification.
     /// A future conversation/LLM layer can call this with decoded JSON.
     func setFigure(_ spec: MonkinFigureSpec) {
         figureSpec = spec
         renderedImage = renderer.image(for: spec, pose: pose)
+#if canImport(RiveRuntime)
+        riveRenderer?.setFigure(spec)
+#endif
         needsDisplay = true
     }
 
@@ -79,8 +107,12 @@ final class PetView: NSView {
     }
 
     func setMotionStyle(_ style: String) {
-        motionStyle = style
-        onMotionStyleChange?(style)
+        let validatedStyle = MonkinMotion.validatedStyle(style)
+        motionStyle = validatedStyle
+#if canImport(RiveRuntime)
+        riveRenderer?.setMotion(validatedStyle)
+#endif
+        onMotionStyleChange?(validatedStyle)
     }
 
     /// Stops the live animation timers so this view can be driven by a
@@ -90,6 +122,11 @@ final class PetView: NSView {
         motionTimer = nil
         blinkTimer?.invalidate()
         blinkTimer = nil
+#if canImport(RiveRuntime)
+        // The benchmark compares deterministic procedural motion graphs, so
+        // retain its established rendering path even in the app target.
+        riveRenderer?.isHidden = true
+#endif
     }
 
     /// Applies one frame from a benchmark motion graph.
@@ -98,6 +135,11 @@ final class PetView: NSView {
     }
 
     private func advanceMotion() {
+#if canImport(RiveRuntime)
+        // Rive owns its CADisplayLink. Avoid rebuilding SVG frames while it is
+        // visible; this keeps idle CPU comparable to the pre-Rive app.
+        if riveRenderer?.isHidden == false { return }
+#endif
         motionPhase += 0.12
         if motionStyle == "jump" {
             advanceJump()
