@@ -2,6 +2,7 @@ import AppKit
 
 final class ThoughtBubbleView: NSView {
     var onTap: (() -> Void)?
+    var onDoubleClick: (() -> Void)?
     private let textField = NSTextField(labelWithString: "")
 
     override init(frame frameRect: NSRect) {
@@ -79,6 +80,10 @@ final class ThoughtBubbleView: NSView {
     }
 
     override func mouseDown(with event: NSEvent) {
+        if event.clickCount == 2, let onDoubleClick {
+            onDoubleClick()
+            return
+        }
         onTap?()
     }
 

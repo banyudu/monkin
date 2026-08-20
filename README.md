@@ -15,6 +15,9 @@ open Monkin.xcodeproj
 
 Run the `Monkin` scheme from Xcode. The generated placeholder monkey can be dragged around the desktop and blinks periodically. The app is an accessory app, so it does not appear in the Dock.
 
+Double-click Monkin to hide it for 30 minutes. While it is hidden, choose
+**Show Monkin Now** from the menu-bar monkey to bring it back early.
+
 ## Screen awareness
 
 Monkin can periodically read visible screen text using Apple Vision's on-device

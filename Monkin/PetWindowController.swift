@@ -1,6 +1,8 @@
 import AppKit
 
 final class PetWindowController: NSWindowController {
+    private static let temporaryHideDuration: TimeInterval = 30 * 60
+
     let petView: PetView
     private let sportsPropView: SportsPropView
     private let thoughtBubble: ThoughtBubbleView
@@ -15,6 +17,8 @@ final class PetWindowController: NSWindowController {
     private var eatingTimer: Timer?
     private var worldTimer: Timer?
     private var storyTimer: Timer?
+    private var temporaryHideTimer: Timer?
+    private var isTemporarilyHidden = false
     private var roamDirection: CGFloat = 1
     private var roamTime: CGFloat = 0
     private var jumpTime: CGFloat = 0
@@ -27,6 +31,8 @@ final class PetWindowController: NSWindowController {
     private var eatingTarget: NSPoint?
     private var lastEatenText: String?
     private var lastEatenAt = Date.distantPast
+
+    var onVisibilityChange: ((Bool) -> Void)?
 
     init() {
         petView = PetView(frame: NSRect(x: 294, y: 10, width: 128, height: 128))
@@ -53,7 +59,9 @@ final class PetWindowController: NSWindowController {
         super.init(window: window)
 
         petView.onTap = { [weak self] in self?.speak() }
+        petView.onDoubleClick = { [weak self] in self?.hideForThirtyMinutes() }
         thoughtBubble.onTap = { [weak self] in self?.speak() }
+        thoughtBubble.onDoubleClick = { [weak self] in self?.hideForThirtyMinutes() }
         petView.onMotionStyleChange = { [weak self] style in
             self?.sportsPropView.setStyle(style)
         }
@@ -72,9 +80,59 @@ final class PetWindowController: NSWindowController {
         petView.setFigure(spec)
     }
 
+    func hideForThirtyMinutes() {
+        guard !isTemporarilyHidden else { return }
+        isTemporarilyHidden = true
+        pauseActivity()
+        temporaryHideTimer?.invalidate()
+        temporaryHideTimer = Timer.scheduledTimer(withTimeInterval: Self.temporaryHideDuration,
+                                                   repeats: false) { [weak self] _ in
+            self?.showNow()
+        }
+        window?.orderOut(nil)
+        waterPoolWindow.hide()
+        onVisibilityChange?(true)
+    }
+
+    func showNow() {
+        guard isTemporarilyHidden else { return }
+        isTemporarilyHidden = false
+        temporaryHideTimer?.invalidate()
+        temporaryHideTimer = nil
+        window?.orderFrontRegardless()
+        resumeActivity()
+        onVisibilityChange?(false)
+    }
+
+    private func pauseActivity() {
+        thoughtTimer?.invalidate()
+        thoughtTimer = nil
+        stopRoaming()
+        ocrTimer?.invalidate()
+        ocrTimer = nil
+        eatingTimer?.invalidate()
+        eatingTimer = nil
+        eatingTarget = nil
+        worldTimer?.invalidate()
+        worldTimer = nil
+        storyTimer?.invalidate()
+        storyTimer = nil
+        waterPoolWindow.hide()
+        petView.setMotionStyle("idle")
+    }
+
+    private func resumeActivity() {
+        scheduleNextThought()
+        scheduleRoaming()
+        scheduleRandomMotion()
+        scheduleScreenReading()
+        scheduleWorldReading()
+    }
+
     private func speak() {
+        guard !isTemporarilyHidden else { return }
         thoughtProvider.nextThought { [weak self] thought in
-            guard let self, let thought else { return }
+            guard let self, !self.isTemporarilyHidden, let thought else { return }
             self.petView.setFigure(thought.figure)
             self.petView.setMotionStyle(thought.motionStyle)
             self.thoughtBubble.show(text: thought.text, for: thought.visibleDuration)
@@ -94,7 +152,8 @@ final class PetWindowController: NSWindowController {
     /// Starts the first gentle desktop stroll after launch.
     private func scheduleRoaming() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 12) { [weak self] in
-            self?.startRoaming()
+            guard let self, !self.isTemporarilyHidden else { return }
+            self.startRoaming()
         }
     }
 
@@ -102,6 +161,7 @@ final class PetWindowController: NSWindowController {
     /// This is intentionally local and deterministic; a future LLM behavior layer
     /// can decide when to call it without driving animation frames itself.
     func startRoaming() {
+        guard !isTemporarilyHidden else { return }
         petView.setMotionStyle("wriggle")
         roamTime = 0
         jumpTime = 0
@@ -140,8 +200,9 @@ final class PetWindowController: NSWindowController {
     }
 
     private func readWorld() {
+        guard !isTemporarilyHidden else { return }
         screenWorldReader.read { [weak self] items in
-            guard let self, self.eatingTarget == nil else { return }
+            guard let self, !self.isTemporarilyHidden, self.eatingTarget == nil else { return }
             guard let target = items.first(where: { $0.isSemanticTarget && $0.label.count >= 2 &&
                 !($0.label == self.lastEatenText && Date().timeIntervalSince(self.lastEatenAt) < 600) }) else { return }
             self.startEating(ScreenText(text: target.label, confidence: 1, screenRect: target.screenRect))
@@ -149,8 +210,9 @@ final class PetWindowController: NSWindowController {
     }
 
     private func readScreen() {
+        guard !isTemporarilyHidden else { return }
         screenTextReader.readMainDisplay { [weak self] items in
-            guard let self else { return }
+            guard let self, !self.isTemporarilyHidden else { return }
             let candidates = items.filter {
                 $0.confidence >= 0.55 && $0.text.count >= 2 && $0.text.count <= 48 &&
                 !($0.text == self.lastEatenText && Date().timeIntervalSince(self.lastEatenAt) < 600)
@@ -166,7 +228,7 @@ final class PetWindowController: NSWindowController {
     }
 
     private func startEating(_ text: ScreenText) {
-        guard let window, eatingTarget == nil else { return }
+        guard !isTemporarilyHidden, let window, eatingTarget == nil else { return }
         lastEatenText = text.text
         lastEatenAt = Date()
         let visible = (window.screen ?? NSScreen.main)?.visibleFrame ?? .zero
@@ -207,6 +269,7 @@ final class PetWindowController: NSWindowController {
     }
 
     private func performNextMotion() {
+        guard !isTemporarilyHidden else { return }
         guard jumpTime <= 0 else { return }
         let style = MonkinMotion.randomExpressive()
         MonkinTelemetry.shared.record("motion.selected", attributes: [
@@ -225,6 +288,7 @@ final class PetWindowController: NSWindowController {
     }
 
     private func performStoryMotion(_ style: String) {
+        guard !isTemporarilyHidden else { return }
         guard let window, let screen = window.screen ?? NSScreen.main else { return }
         storyTimer?.invalidate()
         roamTimer?.invalidate()
@@ -261,7 +325,7 @@ final class PetWindowController: NSWindowController {
                 self.thoughtBubble.show(text: style == "escape" ? "bye!" : "splash!", for: 1.8)
                 if style == "dive" { self.waterPoolWindow.hide() }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { [weak self] in
-                    guard let self, let window = self.window else { return }
+                    guard let self, !self.isTemporarilyHidden, let window = self.window else { return }
                     window.setFrameOrigin(origin)
                     self.petView.setMotionStyle("celebrate")
                     self.startRoaming()
@@ -330,6 +394,7 @@ final class PetWindowController: NSWindowController {
         eatingTimer?.invalidate()
         worldTimer?.invalidate()
         storyTimer?.invalidate()
+        temporaryHideTimer?.invalidate()
         waterPoolWindow.hide()
     }
 

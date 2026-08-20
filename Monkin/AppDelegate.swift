@@ -5,6 +5,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var petWindow: PetWindowController!
     private var benchmarkWindow: MotionBenchmarkWindowController?
     private var statusItem: NSStatusItem!
+    private var showMonkinItem: NSMenuItem!
 
     static func main() {
         let application = NSApplication.shared
@@ -18,6 +19,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
         petWindow = PetWindowController()
+        petWindow.onVisibilityChange = { [weak self] isHidden in
+            self?.showMonkinItem?.isHidden = !isHidden
+        }
         installStatusItem()
         // Order the floating pet without activating Monkin or stealing the
         // key window from the editor that launched/restarted it.
@@ -29,6 +33,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem.button?.title = "🐒"
         statusItem.button?.toolTip = "Monkin Motion Benchmark"
         let menu = NSMenu()
+        showMonkinItem = NSMenuItem(title: "Show Monkin Now",
+                                    action: #selector(showMonkinNow),
+                                    keyEquivalent: "")
+        showMonkinItem.target = self
+        showMonkinItem.isHidden = true
+        menu.addItem(showMonkinItem)
         let benchmarkItem = NSMenuItem(title: "Open Motion Benchmark",
                                        action: #selector(openMotionBenchmark),
                                        keyEquivalent: "b")
@@ -39,6 +49,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                                 action: #selector(NSApplication.terminate(_:)),
                                 keyEquivalent: "q"))
         statusItem.menu = menu
+    }
+
+    @objc private func showMonkinNow() {
+        petWindow.showNow()
     }
 
     @objc private func openMotionBenchmark() {

@@ -5,6 +5,7 @@ import RiveRuntime
 
 final class PetView: NSView {
     var onTap: (() -> Void)?
+    var onDoubleClick: (() -> Void)?
     var onMotionStyleChange: ((String) -> Void)?
     private let furColor = NSColor(calibratedRed: 0.58, green: 0.30, blue: 0.13, alpha: 1)
     private let bellyColor = NSColor(calibratedRed: 0.94, green: 0.72, blue: 0.43, alpha: 1)
@@ -79,6 +80,10 @@ final class PetView: NSView {
     }
 
     override func mouseDown(with event: NSEvent) {
+        if event.clickCount == 2, let onDoubleClick {
+            onDoubleClick()
+            return
+        }
         onTap?()
     }
 
