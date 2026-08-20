@@ -70,5 +70,11 @@ memory. A future LLM bridge only needs to decode validated JSON into
 ./scripts/release.sh 0.1.0
 ```
 
+The package script also builds and installs `Monkin.saver` into
+`~/Library/Screen Savers`, where it becomes selectable in macOS System
+Settings under Screen Saver. Set `MONKIN_SCREENSAVER_DIR` to override the
+installation directory, or use `MONKIN_SKIP_INSTALL=1` to package without
+installing either the app or the screensaver.
+
 Set `MONKIN_SIGNING_IDENTITY` to override the signing certificate, or
 `MONKIN_SKIP_INSTALL=1` to package without copying into `/Applications`.

@@ -220,7 +220,7 @@ final class PetWindowController: NSWindowController {
         petView.setMotionStyle(style)
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [weak self] in
             guard let self, self.jumpTime <= 0 else { return }
-            self.petView.setMotionStyle("wriggle")
+            self.petView.setMotionStyle("idle")
         }
     }
 

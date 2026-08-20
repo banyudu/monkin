@@ -31,3 +31,29 @@ targets:
     scheme:
       gatherCoverageData: false
       commandLineArguments: {}
+  MonkinScreenSaver:
+    type: bundle
+    platform: macOS
+    sources:
+      - path: Monkin/MonkinScreenSaverView.swift
+      - path: Monkin/PetView.swift
+      - path: Monkin/SportsPropView.swift
+      - path: Monkin/MonkinFigureSpec.swift
+      - path: Monkin/MonkinMotion.swift
+      - path: Monkin/MonkinPose.swift
+      - path: Monkin/MonkinSVGRenderer.swift
+      - path: Monkin/Resources
+        type: resource
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.banyudu.monkin.screensaver
+        PRODUCT_NAME: Monkin
+        WRAPPER_EXTENSION: saver
+        INFOPLIST_FILE: Monkin/ScreenSaver-Info.plist
+        CODE_SIGN_ENTITLEMENTS: Monkin/Monkin.entitlements
+        DEVELOPMENT_TEAM: RYLS8UDY5D
+        CODE_SIGN_IDENTITY: Developer ID Application
+        OTHER_LDFLAGS: $(inherited) -framework ScreenSaver
+    scheme:
+      gatherCoverageData: false
+      commandLineArguments: {}
