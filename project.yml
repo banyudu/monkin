@@ -19,8 +19,14 @@ targets:
       - path: Monkin
     resources:
       - path: Monkin/Resources
+    dependencies:
+      - package: RiveRuntime
+        product: RiveRuntime
     settings:
       base:
+        # RiveRuntime 6.22.1 supports macOS 13.1 and later. Keep this
+        # target-specific so the screen saver stays on its existing baseline.
+        MACOSX_DEPLOYMENT_TARGET: 13.1
         PRODUCT_BUNDLE_IDENTIFIER: com.banyudu.monkin
         PRODUCT_NAME: Monkin
         INFOPLIST_FILE: Monkin/Info.plist
@@ -44,6 +50,9 @@ targets:
       - path: Monkin/MonkinSVGRenderer.swift
       - path: Monkin/Resources
         type: resource
+        excludes:
+          - monkin-mascot.riv
+          - monkin-monkey.riv
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.banyudu.monkin.screensaver
@@ -57,3 +66,7 @@ targets:
     scheme:
       gatherCoverageData: false
       commandLineArguments: {}
+packages:
+  RiveRuntime:
+    url: https://github.com/rive-app/rive-ios
+    exactVersion: 6.22.1

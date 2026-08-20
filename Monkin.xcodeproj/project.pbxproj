@@ -11,6 +11,7 @@
 		1C40EF371DE2E7F8CFD17BA6 /* MonkinSVGRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 374FBC3AE5F8FDE54C48AE0C /* MonkinSVGRenderer.swift */; };
 		1CA1D9BFCEE8B6C20F49491F /* MonkinSVGRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 374FBC3AE5F8FDE54C48AE0C /* MonkinSVGRenderer.swift */; };
 		2286961B07E3515A68EC5E02 /* MonkinMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA259F8011B91DC7749D9783 /* MonkinMotion.swift */; };
+		274B6ADE10140F21862F23F3 /* RiveRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = D6D3EA9A65088A5EB15F3A94 /* RiveRuntime */; };
 		30E221AF13766F47688D7D70 /* monkin-coffeehouse.svg in Resources */ = {isa = PBXBuildFile; fileRef = BF6AECE4060D86371CB314E9 /* monkin-coffeehouse.svg */; };
 		3A0AAF31F043FE5EBED3C1D6 /* MonkinFigureSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238AF9B0C44C5C6B2B6E2E8F /* MonkinFigureSpec.swift */; };
 		3CE1A75716BE71D665DD3990 /* ScreenTextReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395F67661E4495E9A4ECF1BB /* ScreenTextReader.swift */; };
@@ -21,6 +22,8 @@
 		5EE2430A00A1255BA25DC397 /* PetWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E0F1586DF3634EE09F2F5A /* PetWindowController.swift */; };
 		609ACBBDC24D31789082D596 /* MonkinTelemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47064D3791B1DC4EABEABBF6 /* MonkinTelemetry.swift */; };
 		74118FD2CECB27FEA8A1B824 /* monkin-night-owl.svg in Resources */ = {isa = PBXBuildFile; fileRef = 80F4549E3AB4610B0300B685 /* monkin-night-owl.svg */; };
+		7C840D1D960ED59D156FA7DA /* monkin-monkey.riv in Resources */ = {isa = PBXBuildFile; fileRef = C323E90CF293AE1470D88912 /* monkin-monkey.riv */; };
+		7CDEF50D71299755DCC3D4E6 /* RivePetRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE201E27EF9E3C004CC9164 /* RivePetRenderer.swift */; };
 		864FA3CAF4EE8C3D9CC079D1 /* WaterPoolWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BB750B782C204E48E84A203 /* WaterPoolWindow.swift */; };
 		932391BFB5D0750693FBC173 /* PetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3553E2E4B7888DE53F62A953 /* PetView.swift */; };
 		A267930675C172CAED2300DF /* monkin-starry.svg in Resources */ = {isa = PBXBuildFile; fileRef = 59BA87D48AADD7F0BF321536 /* monkin-starry.svg */; };
@@ -56,6 +59,7 @@
 		374FBC3AE5F8FDE54C48AE0C /* MonkinSVGRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkinSVGRenderer.swift; sourceTree = "<group>"; };
 		395F67661E4495E9A4ECF1BB /* ScreenTextReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTextReader.swift; sourceTree = "<group>"; };
 		47064D3791B1DC4EABEABBF6 /* MonkinTelemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkinTelemetry.swift; sourceTree = "<group>"; };
+		4CE201E27EF9E3C004CC9164 /* RivePetRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RivePetRenderer.swift; sourceTree = "<group>"; };
 		539B44FFB5C1C46DF672A232 /* MotionBenchmarkWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionBenchmarkWindowController.swift; sourceTree = "<group>"; };
 		5665016EDEA8646928D618A7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		59BA87D48AADD7F0BF321536 /* monkin-starry.svg */ = {isa = PBXFileReference; path = "monkin-starry.svg"; sourceTree = "<group>"; };
@@ -68,11 +72,23 @@
 		B35915515ED8A57FBE6807EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		BF6AECE4060D86371CB314E9 /* monkin-coffeehouse.svg */ = {isa = PBXFileReference; path = "monkin-coffeehouse.svg"; sourceTree = "<group>"; };
 		BF7DB7304AD48EB98CF8A525 /* Monkin.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Monkin.entitlements; sourceTree = "<group>"; };
+		C323E90CF293AE1470D88912 /* monkin-monkey.riv */ = {isa = PBXFileReference; path = "monkin-monkey.riv"; sourceTree = "<group>"; };
 		CD95B63B7358EF9078B96935 /* monkin-retro.svg */ = {isa = PBXFileReference; path = "monkin-retro.svg"; sourceTree = "<group>"; };
 		D4BAC44FF007556E4AE4C887 /* MonkinScreenSaverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkinScreenSaverView.swift; sourceTree = "<group>"; };
 		DFB73B8762E37249E13E7BCB /* MonkinPose.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkinPose.swift; sourceTree = "<group>"; };
 		FA259F8011B91DC7749D9783 /* MonkinMotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkinMotion.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		445889C62027C2324FD7FEB4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				274B6ADE10140F21862F23F3 /* RiveRuntime in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		32FB129CC8E73A93FE25D88E /* Monkin */ = {
@@ -92,6 +108,7 @@
 				2ED84385177D34C4418D20F6 /* MotionGraph.swift */,
 				3553E2E4B7888DE53F62A953 /* PetView.swift */,
 				05E0F1586DF3634EE09F2F5A /* PetWindowController.swift */,
+				4CE201E27EF9E3C004CC9164 /* RivePetRenderer.swift */,
 				97B70E63078CE29D061B3DCE /* ScreenSaver-Info.plist */,
 				395F67661E4495E9A4ECF1BB /* ScreenTextReader.swift */,
 				2230341D1D8EC02CA480AA23 /* ScreenWorldReader.swift */,
@@ -107,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				BF6AECE4060D86371CB314E9 /* monkin-coffeehouse.svg */,
+				C323E90CF293AE1470D88912 /* monkin-monkey.riv */,
 				80F4549E3AB4610B0300B685 /* monkin-night-owl.svg */,
 				CD95B63B7358EF9078B96935 /* monkin-retro.svg */,
 				59BA87D48AADD7F0BF321536 /* monkin-starry.svg */,
@@ -159,6 +177,7 @@
 			buildPhases = (
 				B428DD7F27DC14A9AEB55F87 /* Sources */,
 				C57D05602ECCE4F76CD733A2 /* Resources */,
+				445889C62027C2324FD7FEB4 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -166,6 +185,7 @@
 			);
 			name = Monkin;
 			packageProductDependencies = (
+				D6D3EA9A65088A5EB15F3A94 /* RiveRuntime */,
 			);
 			productName = Monkin;
 			productReference = 81F1CBAFAAA8AA205E475E19 /* Monkin.app */;
@@ -199,6 +219,9 @@
 			);
 			mainGroup = C79D338087EA08F9FE045F5B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				1EC9CFEBBE6F3D5A32541D1C /* XCRemoteSwiftPackageReference "rive-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D03BCDE4DE833F18C341B2AD /* Products */;
 			projectDirPath = "";
@@ -229,6 +252,7 @@
 			files = (
 				F0BE1510DA8A6FF8946ED061 /* ScreenSaver-Info.plist in Resources */,
 				B4F5D5372C607E5B70112553 /* monkin-coffeehouse.svg in Resources */,
+				7C840D1D960ED59D156FA7DA /* monkin-monkey.riv in Resources */,
 				74118FD2CECB27FEA8A1B824 /* monkin-night-owl.svg in Resources */,
 				D502A9BE31595552099B99C3 /* monkin-retro.svg in Resources */,
 				E2412D920C8C9E5BC647F277 /* monkin-starry.svg in Resources */,
@@ -269,6 +293,7 @@
 				E7FD43DE75123264F5F3C07C /* MotionGraph.swift in Sources */,
 				E78DCA17291B52030902A2EE /* PetView.swift in Sources */,
 				5EE2430A00A1255BA25DC397 /* PetWindowController.swift in Sources */,
+				7CDEF50D71299755DCC3D4E6 /* RivePetRenderer.swift in Sources */,
 				3CE1A75716BE71D665DD3990 /* ScreenTextReader.swift in Sources */,
 				DE469FCE45AA46044FF3FCE5 /* ScreenWorldReader.swift in Sources */,
 				D290C70A69F294D32629DAAE /* SportsPropView.swift in Sources */,
@@ -388,6 +413,7 @@
 				DEVELOPMENT_TEAM = RYLS8UDY5D;
 				INFOPLIST_FILE = Monkin/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.banyudu.monkin;
 				PRODUCT_NAME = Monkin;
 				SDKROOT = macosx;
@@ -404,6 +430,7 @@
 				DEVELOPMENT_TEAM = RYLS8UDY5D;
 				INFOPLIST_FILE = Monkin/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.banyudu.monkin;
 				PRODUCT_NAME = Monkin;
 				SDKROOT = macosx;
@@ -506,6 +533,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1EC9CFEBBE6F3D5A32541D1C /* XCRemoteSwiftPackageReference "rive-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rive-app/rive-ios";
+			requirement = {
+				kind = exactVersion;
+				version = 6.22.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D6D3EA9A65088A5EB15F3A94 /* RiveRuntime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1EC9CFEBBE6F3D5A32541D1C /* XCRemoteSwiftPackageReference "rive-ios" */;
+			productName = RiveRuntime;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C9BA9CA77CFEF3A441939214 /* Project object */;
 }

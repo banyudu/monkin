@@ -4,7 +4,7 @@ Monkin is a tiny native macOS desktop pet: a friendly monkey that lives above yo
 
 ## Run
 
-Requirements: macOS 13+ and Xcode. The project uses bundle identifier
+Requirements: macOS 13.1+ and Xcode. The project uses bundle identifier
 `com.banyudu.monkin` and signs local packaged builds with the installed
 `Developer ID Application: Yudu Ban (RYLS8UDY5D)` certificate when available.
 
@@ -32,9 +32,14 @@ each screenshot is analyzed. The interval and target-selection policy live in
 `PetWindowController.swift`, and the reusable OCR/capture layer is in
 `ScreenTextReader.swift`.
 
-## Direction
+## Animation runtime
 
-The drawing is intentionally self-contained in `PetView.swift`, making it easy to replace with sprite sheets, an animated image, or a richer SwiftUI/AppKit character later.
+The desktop application renders the pet with Rive when the bundled `.riv`
+asset is available, while retaining the procedural SVG renderer as a safe
+migration fallback. The floating window, dragging, roaming, thought bubbles,
+and screen awareness remain native AppKit behavior. See
+[`docs/rive-runtime.md`](docs/rive-runtime.md) for the pinned runtime version,
+asset workflow, performance smoke check, and license attribution.
 
 ## Dynamic figures
 
