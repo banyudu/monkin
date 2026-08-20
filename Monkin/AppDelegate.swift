@@ -26,7 +26,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func installStatusItem() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem.button?.title = "🐒"
+        statusItem.button?.title = "Monkin"
+        statusItem.button?.toolTip = "Monkin Motion Benchmark"
         let menu = NSMenu()
         let benchmarkItem = NSMenuItem(title: "Open Motion Benchmark",
                                        action: #selector(openMotionBenchmark),
