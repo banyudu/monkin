@@ -15,6 +15,7 @@
 		3A0AAF31F043FE5EBED3C1D6 /* MonkinFigureSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238AF9B0C44C5C6B2B6E2E8F /* MonkinFigureSpec.swift */; };
 		3CE1A75716BE71D665DD3990 /* ScreenTextReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395F67661E4495E9A4ECF1BB /* ScreenTextReader.swift */; };
 		4A50D32A25B1860E615EBE6E /* SportsPropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F53A7E4DD4E22DADE79F09 /* SportsPropView.swift */; };
+		546E0E08D37CBBD4DD70B6A4 /* MotionBenchmarkWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 539B44FFB5C1C46DF672A232 /* MotionBenchmarkWindowController.swift */; };
 		568EA246271928489D841E20 /* monkin-zen-desk.svg in Resources */ = {isa = PBXBuildFile; fileRef = 1BAA124D665540F62015C322 /* monkin-zen-desk.svg */; };
 		580F3518DAFB2DF82C71F30E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5665016EDEA8646928D618A7 /* AppDelegate.swift */; };
 		5EE2430A00A1255BA25DC397 /* PetWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05E0F1586DF3634EE09F2F5A /* PetWindowController.swift */; };
@@ -37,6 +38,7 @@
 		E2412D920C8C9E5BC647F277 /* monkin-starry.svg in Resources */ = {isa = PBXBuildFile; fileRef = 59BA87D48AADD7F0BF321536 /* monkin-starry.svg */; };
 		E66EB09F3244E7DCF0874E76 /* MonkinMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA259F8011B91DC7749D9783 /* MonkinMotion.swift */; };
 		E78DCA17291B52030902A2EE /* PetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3553E2E4B7888DE53F62A953 /* PetView.swift */; };
+		E7FD43DE75123264F5F3C07C /* MotionGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED84385177D34C4418D20F6 /* MotionGraph.swift */; };
 		E8735739CAC66EB5EC8C9296 /* MonkinFigureSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238AF9B0C44C5C6B2B6E2E8F /* MonkinFigureSpec.swift */; };
 		F0BE1510DA8A6FF8946ED061 /* ScreenSaver-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 97B70E63078CE29D061B3DCE /* ScreenSaver-Info.plist */; };
 		F5AD178202705C44748AAEC8 /* monkin-zen-desk.svg in Resources */ = {isa = PBXBuildFile; fileRef = 1BAA124D665540F62015C322 /* monkin-zen-desk.svg */; };
@@ -48,11 +50,13 @@
 		2230341D1D8EC02CA480AA23 /* ScreenWorldReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenWorldReader.swift; sourceTree = "<group>"; };
 		238AF9B0C44C5C6B2B6E2E8F /* MonkinFigureSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkinFigureSpec.swift; sourceTree = "<group>"; };
 		23C55B1498B0686040D82842 /* ThoughtBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThoughtBubbleView.swift; sourceTree = "<group>"; };
+		2ED84385177D34C4418D20F6 /* MotionGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionGraph.swift; sourceTree = "<group>"; };
 		336BB3163FEDCD47FBF46CBA /* MonkinScreenSaver.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MonkinScreenSaver.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		3553E2E4B7888DE53F62A953 /* PetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetView.swift; sourceTree = "<group>"; };
 		374FBC3AE5F8FDE54C48AE0C /* MonkinSVGRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkinSVGRenderer.swift; sourceTree = "<group>"; };
 		395F67661E4495E9A4ECF1BB /* ScreenTextReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTextReader.swift; sourceTree = "<group>"; };
 		47064D3791B1DC4EABEABBF6 /* MonkinTelemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonkinTelemetry.swift; sourceTree = "<group>"; };
+		539B44FFB5C1C46DF672A232 /* MotionBenchmarkWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionBenchmarkWindowController.swift; sourceTree = "<group>"; };
 		5665016EDEA8646928D618A7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		59BA87D48AADD7F0BF321536 /* monkin-starry.svg */ = {isa = PBXFileReference; path = "monkin-starry.svg"; sourceTree = "<group>"; };
 		6BB750B782C204E48E84A203 /* WaterPoolWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterPoolWindow.swift; sourceTree = "<group>"; };
@@ -84,6 +88,8 @@
 				374FBC3AE5F8FDE54C48AE0C /* MonkinSVGRenderer.swift */,
 				47064D3791B1DC4EABEABBF6 /* MonkinTelemetry.swift */,
 				B2190F3BA291F55E016409E5 /* MonkinThought.swift */,
+				539B44FFB5C1C46DF672A232 /* MotionBenchmarkWindowController.swift */,
+				2ED84385177D34C4418D20F6 /* MotionGraph.swift */,
 				3553E2E4B7888DE53F62A953 /* PetView.swift */,
 				05E0F1586DF3634EE09F2F5A /* PetWindowController.swift */,
 				97B70E63078CE29D061B3DCE /* ScreenSaver-Info.plist */,
@@ -259,6 +265,8 @@
 				D0B899C42B32143F49485C9E /* MonkinScreenSaverView.swift in Sources */,
 				609ACBBDC24D31789082D596 /* MonkinTelemetry.swift in Sources */,
 				B0086B42D28ACA7E9CB786C7 /* MonkinThought.swift in Sources */,
+				546E0E08D37CBBD4DD70B6A4 /* MotionBenchmarkWindowController.swift in Sources */,
+				E7FD43DE75123264F5F3C07C /* MotionGraph.swift in Sources */,
 				E78DCA17291B52030902A2EE /* PetView.swift in Sources */,
 				5EE2430A00A1255BA25DC397 /* PetWindowController.swift in Sources */,
 				3CE1A75716BE71D665DD3990 /* ScreenTextReader.swift in Sources */,

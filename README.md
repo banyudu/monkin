@@ -57,6 +57,15 @@ petWindow.setFigure(MonkinFigureSpec(
 memory. A future LLM bridge only needs to decode validated JSON into
 `MonkinFigureSpec`; it does not need to generate the complete character SVG.
 
+## Motion benchmark
+
+Monkin includes a local A/B curator for generated motion-graph pairs. Open the
+monkey status-bar menu and choose **Open Motion Benchmark**. It generates 150
+deterministic cases, previews candidates side by side, and stores pairwise
+labels as JSONL under `~/Library/Application Support/Monkin/`. See
+[`docs/motion-benchmark.md`](docs/motion-benchmark.md) for the schema and
+workflow.
+
 ## Build and deploy
 
 ```sh

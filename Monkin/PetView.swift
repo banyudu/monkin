@@ -83,6 +83,20 @@ final class PetView: NSView {
         onMotionStyleChange?(style)
     }
 
+    /// Stops the live animation timers so this view can be driven by a
+    /// deterministic benchmark timeline.
+    func prepareForBenchmark() {
+        motionTimer?.invalidate()
+        motionTimer = nil
+        blinkTimer?.invalidate()
+        blinkTimer = nil
+    }
+
+    /// Applies one frame from a benchmark motion graph.
+    func setBenchmarkPose(_ pose: MonkinPose) {
+        setPose(pose)
+    }
+
     private func advanceMotion() {
         motionPhase += 0.12
         if motionStyle == "jump" {
