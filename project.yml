@@ -48,6 +48,9 @@ targets:
       - path: Monkin/MonkinMotion.swift
       - path: Monkin/MonkinPose.swift
       - path: Monkin/MonkinSVGRenderer.swift
+      - path: Monkin/MotionProgram.swift
+      - path: Monkin/MotionInterpreter.swift
+      - path: Monkin/MotionPresets.swift
       - path: Monkin/Resources
         type: resource
         excludes:

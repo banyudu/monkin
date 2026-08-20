@@ -19,6 +19,10 @@ enum MonkinMotion {
         all.contains(style) ? style : "idle"
     }
 
+    static func program(for style: String) -> MotionProgram {
+        MotionPresets.program(for: validatedStyle(style))
+    }
+
     static func randomExpressive() -> String {
         // Make sports common enough to notice during a short observation.
         if Int.random(in: 0..<3) == 0, let sport = sports.randomElement() {
