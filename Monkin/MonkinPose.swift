@@ -1,6 +1,6 @@
 import Foundation
 
-struct MonkinPose {
+struct MonkinPose: Equatable {
     var bodyBob: CGFloat = 0
     var bodyScaleX: CGFloat = 1
     var bodyScaleY: CGFloat = 1

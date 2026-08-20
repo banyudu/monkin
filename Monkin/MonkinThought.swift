@@ -5,12 +5,15 @@ struct MonkinThought {
     let figure: MonkinFigureSpec
     let visibleDuration: TimeInterval
     let motionStyle: String
+    let motionProgram: MotionProgram?
 
-    init(text: String, figure: MonkinFigureSpec, visibleDuration: TimeInterval, motionStyle: String = "idle") {
+    init(text: String, figure: MonkinFigureSpec, visibleDuration: TimeInterval,
+         motionStyle: String = "idle", motionProgram: MotionProgram? = nil) {
         self.text = text
         self.figure = figure
         self.visibleDuration = visibleDuration
         self.motionStyle = motionStyle
+        self.motionProgram = motionProgram
     }
 }
 
@@ -72,6 +75,7 @@ final class CodexThoughtProvider: MonkinThoughtProvider {
         let accent: String?
         let visibleDuration: Double?
         let motion: String?
+        let motionProgram: MotionProgram?
     }
 
     private let fallback: MonkinThoughtProvider
@@ -173,11 +177,19 @@ final class CodexThoughtProvider: MonkinThoughtProvider {
         let accent = payload.accent?.hasPrefix("#") == true ? payload.accent! : "#4A7772"
         let duration = min(max(payload.visibleDuration ?? 7, 4), 12)
         let motion = MonkinMotion.all.contains(payload.motion ?? "") ? payload.motion! : "idle"
+        var validatedProgram: MotionProgram?
+        if let program = payload.motionProgram {
+            let result = MotionInterpreter.validate(program)
+            if result.isValid || !result.program.layers.isEmpty {
+                validatedProgram = result.program
+            }
+        }
         return MonkinThought(text: text,
                              figure: MonkinFigureSpec(eyes: eyes, brows: brows, mouth: mouth,
                                                       cheeks: payload.cheeks == "light" ? "light" : nil,
                                                       accessories: Array(accessories), colors: ["accent": accent]),
                              visibleDuration: duration,
-                             motionStyle: motion)
+                             motionStyle: motion,
+                             motionProgram: validatedProgram)
     }
 }

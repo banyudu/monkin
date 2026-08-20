@@ -57,6 +57,26 @@ final class RivePetRenderer: NSView {
         nil
     }
 
+    /// Applies interpreter-generated pose values via data-binding inputs.
+    /// Active once the Rive state machine defines matching number inputs;
+    /// until then, calls to setInput on missing inputs are silent no-ops.
+    func applyPose(_ pose: MonkinPose) {
+        viewModel.setInput("bodyBob", value: Float(pose.bodyBob))
+        viewModel.setInput("bodyScaleX", value: Float(pose.bodyScaleX))
+        viewModel.setInput("bodyScaleY", value: Float(pose.bodyScaleY))
+        viewModel.setInput("headRotation", value: Float(pose.headRotation))
+        viewModel.setInput("headOffsetY", value: Float(pose.headOffsetY))
+        viewModel.setInput("headScaleX", value: Float(pose.headScaleX))
+        viewModel.setInput("headScaleY", value: Float(pose.headScaleY))
+        viewModel.setInput("leftArmRotation", value: Float(pose.leftArmRotation))
+        viewModel.setInput("rightArmRotation", value: Float(pose.rightArmRotation))
+        viewModel.setInput("leftArmOffsetY", value: Float(pose.leftArmOffsetY))
+        viewModel.setInput("rightArmOffsetY", value: Float(pose.rightArmOffsetY))
+        viewModel.setInput("leftLegRotation", value: Float(pose.leftLegRotation))
+        viewModel.setInput("rightLegRotation", value: Float(pose.rightLegRotation))
+        viewModel.setInput("tailRotation", value: Float(pose.tailRotation))
+    }
+
     /// The sample asset has no dynamic inputs yet. Retaining this API makes
     /// figure customization an intentional, renderer-local extension point.
     func setFigure(_ figure: MonkinFigureSpec) {

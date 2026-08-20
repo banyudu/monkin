@@ -135,6 +135,9 @@ final class PetWindowController: NSWindowController {
             guard let self, !self.isTemporarilyHidden, let thought else { return }
             self.petView.setFigure(thought.figure)
             self.petView.setMotionStyle(thought.motionStyle)
+            if let program = thought.motionProgram {
+                self.petView.setMotionProgram(program)
+            }
             self.thoughtBubble.show(text: thought.text, for: thought.visibleDuration)
         }
     }
