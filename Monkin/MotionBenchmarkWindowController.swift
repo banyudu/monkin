@@ -85,7 +85,9 @@ final class MotionBenchmarkWindowController: NSWindowController {
             stack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             cards.heightAnchor.constraint(equalToConstant: 470),
             leftPreview.widthAnchor.constraint(equalToConstant: 240),
-            rightPreview.widthAnchor.constraint(equalToConstant: 240)
+            leftPreview.heightAnchor.constraint(equalToConstant: 240),
+            rightPreview.widthAnchor.constraint(equalToConstant: 240),
+            rightPreview.heightAnchor.constraint(equalToConstant: 240)
         ])
     }
 
