@@ -1,9 +1,15 @@
 import Foundation
 
 enum MonkinMotion {
-    static let all = ["idle", "wriggle", "jump", "wave", "celebrate", "peek", "sleepy", "scratch", "tiptoe", "spin", "stumble", "hide", "stretch", "escape", "dive", "swim", "soccer", "basketball", "tennis", "skate", "weightlifting", "jump-rope"]
+    static let all = [
+        "idle", "wriggle", "jump", "wave", "celebrate", "peek", "sleepy",
+        "scratch", "tiptoe", "spin", "stumble", "hide", "stretch", "escape",
+        "dive", "swim", "soccer", "basketball", "tennis", "skate", "weightlifting",
+        "jump-rope", "clap", "dance", "laugh", "look-around", "yawn", "bow"
+    ]
     static let expressive = Array(all.dropFirst())
     static let sports = ["soccer", "basketball", "tennis", "swim", "skate", "weightlifting", "jump-rope"]
+    static let promptValues = all.joined(separator: "|")
 
     /// The only motion names accepted at the animation boundary. Callers from
     /// thoughts, roaming, and future conversation tools may provide arbitrary

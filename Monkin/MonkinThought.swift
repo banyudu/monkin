@@ -140,7 +140,7 @@ final class CodexThoughtProvider: MonkinThoughtProvider {
             本次优先围绕“\(topic)”说话。请保持主题多样，不要总是围绕鼠标、光标、键盘或咖啡；它们偶尔可以出现，但不要连续重复。每次尽量换一个观察角度。
 
             只返回一个合法 JSON 对象，不要代码块：
-            {"text":"不超过45字的台词","eyes":"neutral|happy|sad|curious|sleepy","brows":"relaxed|raised|worried","mouth":"neutral|smile|open|sad|smirk","cheeks":"light 或 null","accessories":["coffee|spark|question-mark|moon"],"accent":"#RRGGBB","visibleDuration":7,"motion":"idle|wriggle|jump|wave|celebrate|peek|sleepy|scratch|tiptoe|spin|stumble|hide|stretch"}
+            {"text":"不超过45字的台词","eyes":"neutral|happy|sad|curious|sleepy","brows":"relaxed|raised|worried","mouth":"neutral|smile|open|sad|smirk","cheeks":"light 或 null","accessories":["coffee|spark|question-mark|moon"],"accent":"#RRGGBB","visibleDuration":7,"motion":"\(MonkinMotion.promptValues)"}
             """
             input.fileHandleForWriting.write(prompt.data(using: .utf8)!)
             try input.fileHandleForWriting.close()
